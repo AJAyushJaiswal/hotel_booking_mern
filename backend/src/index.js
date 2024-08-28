@@ -1,0 +1,24 @@
+import connectToDB from './db.js';
+import app from './app.js';
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+connectToDB().then(() => {
+    try{
+        app.on('error', (error) => {
+            console.log(`ERROR: ${error}`);
+            process.exit(1);
+        })
+
+        let port = process.env.PORT || 8000;
+        app.listen(port, ()=> {
+            console.log(`Listening at localhost: ${port}!!`);
+        });
+    }    
+    catch(error){
+        console.log('MONGDB CONNECTION FAILED!!!');        
+        console.log(error);
+        process.exit(1);
+    }
+})
