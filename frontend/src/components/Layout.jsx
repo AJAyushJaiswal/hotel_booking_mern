@@ -5,11 +5,13 @@ import {Outlet} from 'react-router-dom';
 
 function Layout(){
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Header/>
-            <Outlet/>
+            <div className="container mx-auto py-8 flex-1">
+                <Outlet/>
+            </div>
             <Footer/>
-        </>
+        </div>
     )
 }
 
