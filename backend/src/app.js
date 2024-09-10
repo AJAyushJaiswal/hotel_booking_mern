@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import {errorHandler} from './middlewares/errorHandler.middleware';
 
 const app = express();
 
@@ -14,9 +15,8 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
-app.get('/api/test', async (req, res) => {
-    res.json({message: "hello from express endpoint"});
-});
 
+
+app.use(errorHandler);
 
 export default app;
