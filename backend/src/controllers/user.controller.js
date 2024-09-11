@@ -2,7 +2,7 @@ import {asyncHandler} from '../utils/asyncHandler.js';
 import {ApiError} from '../utils/ApiError.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {User} from '../models/user.model.js';
-
+import jwt from 'jsonwebtoken';
 
 
 const accessTokenMaxAge = 30 * 60 * 1000;
@@ -130,6 +130,55 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, null, "User logged out successfully!"));
+})
+
+
+
+const refreshAccessToken = asyncHandler(async(req, res) => {
+    const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+    
+    if(!incomingRefreshToken.trim()){
+        throw new ApiError(401, "Unauthorised request!");
+    }
+    
+    try{
+        const decodedRefreshToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+        
+        if(!decodedRefreshToken){
+            throw new ApiError(403, "Invalid refresh token!");
+        }
+        
+        const user = await User.findById(decodedRefreshToken._id).select('refreshToken').lean();
+
+        if(!user || user.refreshToken !== incomingRefreshToken){
+            throw new ApiError(403, "Invalid refresh token!");
+        }
+    
+        const {accessToken, refreshedUser} = await generateAccessAndRefreshTokens(user._id);
+        const refreshToken = refreshedUser.refreshToken;
+        
+        const options = {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'Strict'
+        }
+        
+        res.status(200)
+        .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
+        .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
+        .json(new ApiResponse(200, {user: refreshedUser, accessToken, refreshToken}), "Access token refreshed successfully!");
+    }
+    catch(error){
+        if(error instanceof jwt.TokenExpiredError){
+            throw new ApiError(403, "Invalid refresh token!");            
+        }
+        else if(error instanceof jwt.JsonWebTokenError){
+            throw new ApiError(403, "Invalid refresh token!");
+        }
+
+        throw new ApiError(error?.statusCode || 500, error?.message || "Error refreshing access token!");
+    }
+    
 })
 
 
