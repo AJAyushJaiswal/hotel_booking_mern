@@ -17,17 +17,17 @@ const generateAccessAndRefreshTokens = async function(userId){
     }
     
     const accessToken = await user.generateAccessToken();
-    const refreshedUser = await user.generateRefreshToken();
+    const refreshToken = await user.generateRefreshToken();
     
     if(!accessToken){
         throw new ApiError(500, "Error generating access token!");
     }
     
-    if(!refreshedUser){
+    if(!refreshToken){
         throw new ApiError(500, "Error generating refresh token!");
     } 
     
-    return {accessToken, refreshedUser};
+    return {accessToken, refreshToken};
 }
 
 
@@ -49,13 +49,10 @@ const registerUser = asyncHandler(async (req, res, next) => {
         throw new ApiError(500, "Error registering the user!");
     }
 
-    const {accessToken, refreshedUser} = await generateAccessAndRefreshTokens(user._id);
+    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
     
-    const refreshToken = refreshedUser.refreshToken;
-    
-    delete refreshedUser._doc.password;
-    delete refreshedUser._doc.__v;
-    delete refreshedUser._doc.refreshToken;
+    delete user._doc.password;
+    delete user._doc.__v;
     
     const options = {
         httpOnly: true,
@@ -66,7 +63,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
     res.status(201)
     .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
     .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
-    .json(new ApiResponse(201, {user: refreshedUser, accessToken, refreshToken}, "User registered successfully!"));
+    .json(new ApiResponse(201, {user, accessToken, refreshToken}, "User registered successfully!"));
 });
 
 
@@ -92,12 +89,10 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid credentials!");
     }
     
-    const {accessToken, refreshedUser} = generateAccessAndRefreshTokens(user._id);   
-    const refreshToken = refreshedUser.refreshToken;
+    const {accessToken, refreshToken} = generateAccessAndRefreshTokens(user._id);   
     
-    delete refreshedUser._doc.password;
-    delete refreshedUser._doc.__v;
-    delete refreshedUser._doc.refreshToken;
+    delete user._doc.password;
+    delete user._doc.__v;
     
     const options = {
         httpOnly: true,
@@ -108,7 +103,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(200)
     .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
     .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
-    .json(new ApiResponse(200, {user:refreshedUser, accessToken, refreshToken}));
+    .json(new ApiResponse(200, {user, accessToken, refreshToken}));
 })
 
 
@@ -148,14 +143,15 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
             throw new ApiError(403, "Invalid refresh token!");
         }
         
-        const user = await User.findById(decodedRefreshToken._id).select('refreshToken').lean();
+        const user = await User.findById(decodedRefreshToken._id).select('-__v -password').lean();
 
         if(!user || user.refreshToken !== incomingRefreshToken){
             throw new ApiError(403, "Invalid refresh token!");
         }
     
-        const {accessToken, refreshedUser} = await generateAccessAndRefreshTokens(user._id);
-        const refreshToken = refreshedUser.refreshToken;
+        const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
+        
+        delete user._doc.refreshToken;
         
         const options = {
             httpOnly: true,
@@ -166,7 +162,7 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
         res.status(200)
         .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
         .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
-        .json(new ApiResponse(200, {user: refreshedUser, accessToken, refreshToken}), "Access token refreshed successfully!");
+        .json(new ApiResponse(200, {user, accessToken, refreshToken}), "Access token refreshed successfully!");
     }
     catch(error){
         if(error instanceof jwt.TokenExpiredError){
