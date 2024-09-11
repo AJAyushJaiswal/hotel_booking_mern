@@ -113,6 +113,27 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
 
+const logoutUser = asyncHandler(async (req, res) => {
+    const result = await User.updateOne({_id: req.user.id}, {$unset: {refreshToken: 1}}); 
+
+    if(result.modifiedCount === 0){
+        throw new ApiError(500, "Error logging out!");
+    }
+    
+    const options = {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict'
+    }
+    
+    res.status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, null, "User logged out successfully!"));
+})
+
+
+
 export {
     registerUser
 }
