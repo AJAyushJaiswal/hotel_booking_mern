@@ -25,8 +25,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    refreshToken: {
+        type: String
     }
-
 });
 
 
@@ -55,7 +57,7 @@ userSchema.methods.generateAccessToken = async function(){
 }
 
 userSchema.methods.generateRefreshToken = async function(){
-    return jwt.sign(
+    const refreshToken = jwt.sign(
         {
             _id: this._id
         },
@@ -63,7 +65,10 @@ userSchema.methods.generateRefreshToken = async function(){
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
-    )
+    );
+
+    this.refreshToken = refreshToken;
+    return await this.save();
 }
 
 

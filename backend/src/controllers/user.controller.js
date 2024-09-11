@@ -17,31 +17,24 @@ const generateAccessAndRefreshTokens = async function(userId){
     }
     
     const accessToken = await user.generateAccessToken();
-    const refreshToken = await user.generateRefreshToken();
+    const refreshedUser = await user.generateRefreshToken();
     
     if(!accessToken){
         throw new ApiError(500, "Error generating access token!");
     }
     
-    if(!refreshToken){
+    if(!refreshedUser){
         throw new ApiError(500, "Error generating refresh token!");
     } 
     
-    user.refreshToken = refreshToken;
-    const saveResult = await user.save();
-    
-    if(!saveResult){
-        throw new ApiError(500, "Error saving the refresh token in the database!");
-    }
-    
-    return {accessToken, refreshToken}
-};
+    return {accessToken, refreshedUser};
+}
 
 
 const registerUser = asyncHandler(async (req, res, next) => {
     const {firstName, lastName, email, password} = req.body;
     
-    if([firstName, lastName, email, password].some(field => field?.trim() == '')){
+    if([firstName, lastName, email, password].some(field => !field?.trim())){
         throw new ApiError(400, "All fields are required!");
     }
     
@@ -51,11 +44,18 @@ const registerUser = asyncHandler(async (req, res, next) => {
     }
     
     const user = await User.create({firstName, lastName, email, password});    
+
     if(!user){
         throw new ApiError(500, "Error registering the user!");
     }
 
-    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
+    const {accessToken, refreshedUser} = await generateAccessAndRefreshTokens(user._id);
+    
+    const refreshToken = refreshedUser.refreshToken;
+    
+    delete refreshedUser._doc.password;
+    delete refreshedUser._doc.__v;
+    delete refreshedUser._doc.refreshToken;
     
     const options = {
         httpOnly: true,
@@ -66,7 +66,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
     res.status(201)
     .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
     .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
-    .json(new ApiResponse(201, {user, accessToken, refreshToken}, "User registered successfully!"));
+    .json(new ApiResponse(201, {user: refreshedUser, accessToken, refreshToken}, "User registered successfully!"));
 });
 
 
