@@ -60,7 +60,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
     const options = {
         httpOnly: true,
         secure: true,
-        sameSite: true
+        sameSite: 'Strict'
     }
     
     res.status(201)
@@ -68,6 +68,49 @@ const registerUser = asyncHandler(async (req, res, next) => {
     .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
     .json(new ApiResponse(201, {user: refreshedUser, accessToken, refreshToken}, "User registered successfully!"));
 });
+
+
+
+const loginUser = asyncHandler(async (req, res) => {
+    const {email, password} = req.body;
+    
+    if(!email?.trim()){
+        throw new ApiError(400, "Email is required!");
+    }
+
+    if(password?.trim()){
+        throw new ApiError(400, "Password is required!");
+    }
+
+    const user = await User.findOne({email});
+    if(!user){
+        throw new ApiError(401, "Invalid credentails!");        
+    }
+
+    const isPasswordCorrect = await user.isPasswordCorrect(password);
+    if(!isPasswordCorrect){
+        throw new ApiError(401, "Invalid credentials!");
+    }
+    
+    const {accessToken, refreshedUser} = generateAccessAndRefreshTokens(user._id);   
+    const refreshToken = refreshedUser.refreshToken;
+    
+    delete refreshedUser._doc.password;
+    delete refreshedUser._doc.__v;
+    delete refreshedUser._doc.refreshToken;
+    
+    const options = {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict'
+    }
+
+    res.status(200)
+    .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
+    .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
+    .json(new ApiResponse(200, {user:refreshedUser, accessToken, refreshToken}));
+})
+
 
 
 export {
