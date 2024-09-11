@@ -26,9 +26,15 @@ const verifyAccessToken = asyncHandler(async (req, _, next) => {
         next();
     }
     catch(error){
+        if(error instanceof jwt.TokenExpiredError){
+            console.log(401, "Invalid access token!");
+        }
+        else if(error instanceof jwt.JsonWebTokenError){
+            console.log(401, "Invalid access token!");
+        }
         throw new ApiError(401, "Unauthorised request!");
     }
 });
 
 
-export {asyncHandler}
+export {verifyAccessToken}

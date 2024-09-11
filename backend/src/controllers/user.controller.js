@@ -75,7 +75,7 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Email is required!");
     }
 
-    if(password?.trim()){
+    if(!password?.trim()){
         throw new ApiError(400, "Password is required!");
     }
 
@@ -84,13 +84,14 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid credentails!");        
     }
 
-    const isPasswordCorrect = await user.isPasswordCorrect(password);
+    const isPasswordCorrect = await user.isPasswordCorrect(password.trim());
     if(!isPasswordCorrect){
         throw new ApiError(401, "Invalid credentials!");
     }
     
-    const {accessToken, refreshToken} = generateAccessAndRefreshTokens(user._id);   
+    const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);   
     
+    delete user._doc.refreshToken;
     delete user._doc.password;
     delete user._doc.__v;
     
@@ -103,13 +104,13 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(200)
     .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
     .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
-    .json(new ApiResponse(200, {user, accessToken, refreshToken}));
+    .json(new ApiResponse(200, {user, accessToken, refreshToken}, "User logged in successfully!"));
 })
 
 
 
 const logoutUser = asyncHandler(async (req, res) => {
-    const result = await User.updateOne({_id: req.user.id}, {$unset: {refreshToken: 1}}); 
+    const result = await User.updateOne({_id: req.user._id}, {$unset: {refreshToken: ''}}); 
 
     if(result.modifiedCount === 0){
         throw new ApiError(500, "Error logging out!");
@@ -132,8 +133,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 const refreshAccessToken = asyncHandler(async(req, res) => {
     const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
     
-    if(!incomingRefreshToken.trim()){
-        throw new ApiError(401, "Unauthorised request!");
+    if(!incomingRefreshToken){
+        throw new ApiError(401, "Refresh token is required!");
     }
     
     try{
@@ -151,7 +152,7 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
     
         const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
         
-        delete user._doc.refreshToken;
+        delete user.refreshToken;
         
         const options = {
             httpOnly: true,
@@ -162,7 +163,7 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
         res.status(200)
         .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
         .cookie("refreshToken", refreshToken, {...options, maxAge: refreshTokenMaxAge})
-        .json(new ApiResponse(200, {user, accessToken, refreshToken}), "Access token refreshed successfully!");
+        .json(new ApiResponse(200, {user, accessToken, refreshToken}, "Access token refreshed successfully!"));
     }
     catch(error){
         if(error instanceof jwt.TokenExpiredError){
@@ -174,8 +175,7 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
 
         throw new ApiError(error?.statusCode || 500, error?.message || "Error refreshing access token!");
     }
-    
-})
+});
 
 
 
