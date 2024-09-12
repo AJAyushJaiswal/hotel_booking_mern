@@ -3,6 +3,7 @@ import {ApiError} from '../utils/ApiError.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {User} from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
+import {validationResult} from 'express-validator';
 
 
 const accessTokenMaxAge = 30 * 60 * 1000;
@@ -32,11 +33,12 @@ const generateAccessAndRefreshTokens = async function(userId){
 
 
 const registerUser = asyncHandler(async (req, res, next) => {
-    const {firstName, lastName, email, password} = req.body;
-    
-    if([firstName, lastName, email, password].some(field => !field?.trim())){
-        throw new ApiError(400, "All fields are required!");
+    const result = validationResult(req);
+    if(!result.isEmpty()){
+        throw new ApiError(400, "Invalid user data!", result.errors);
     }
+
+    const {firstName, lastName, email, password} = req.body;
     
     const userExists = await User.exists({email});     
     if(userExists){
@@ -69,16 +71,13 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 
 const loginUser = asyncHandler(async (req, res) => {
+    const result = validationResult(req);
+    if(!result.isEmpty()){
+        throw new ApiError(401, "Invalid credentials!", result.errors);
+    }
+
     const {email, password} = req.body;
     
-    if(!email?.trim()){
-        throw new ApiError(400, "Email is required!");
-    }
-
-    if(!password?.trim()){
-        throw new ApiError(400, "Password is required!");
-    }
-
     const user = await User.findOne({email});
     if(!user){
         throw new ApiError(401, "Invalid credentails!");        
