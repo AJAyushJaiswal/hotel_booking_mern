@@ -58,8 +58,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
     
     const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: 'Strict'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax'
     }
     
     res.status(201)
@@ -96,9 +96,10 @@ const loginUser = asyncHandler(async (req, res) => {
     
     const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: 'Strict'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax'
     }
+    console.log(process.env.NODE_ENV === 'production');
 
     res.status(200)
     .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
@@ -117,8 +118,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     
     const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: 'Strict'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax'
     }
     
     res.status(200)
@@ -155,8 +156,8 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
         
         const options = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'Strict'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax'
         }
         
         res.status(200)
