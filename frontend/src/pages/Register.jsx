@@ -1,11 +1,16 @@
 import {useForm} from 'react-hook-form';
 
+
 export default function Register(){
-    const {register, watch} = useForm();
-    
+    const {register, watch, handleSubmit, formState:{errors}} = useForm();
+
+    const onSubmit = handleSubmit((data) => {
+        console.log(data);
+    });
+
 
     return (
-        <form className="flex flex-col gap-6 my-16 max-w-3xl mx-auto">
+        <form className="flex flex-col gap-6 my-16 max-w-3xl mx-auto" onSubmit={onSubmit}>
             <h2 className="text-4xl font-bold text-center">Create an account</h2>
             <div className="flex flex-col md:flex-row gap-5">
                 <label className="text-gray-700 text-sm font-bold flex-1">
@@ -16,8 +21,15 @@ export default function Register(){
                         minLength: {
                             value: 2,
                             message: "First name must be at least 2 characters"
+                        },
+                        pattern: {
+                            value: /^[A-Za-z]+$/,
+                            message: "First name must only contain alphabet characters"
                         }
                     })}/>
+                    {errors.firstName && (
+                        <span className="text-red-500">{errors.firstName.message}</span>
+                    )} 
                 </label>
                 <label className="text-gray-700 text-sm font-bold flex-1">
                     Lastname
@@ -27,14 +39,27 @@ export default function Register(){
                         minLength: {
                             value: 2,
                             message: "Last name must be at least 2 characters"
+                        },
+                        pattern: {
+                            value: /^[A-Za-z]+$/,
+                            message: "Last name must only contain alphabet characters"
                         }
+                        
                     })}/>
+                    {errors.lastName && (
+                        <span className="text-red-500">{errors.lastName.message}</span>
+                    )}
                 </label>
             </div>
             <label className="text-gray-700 text-sm font-bold flex-1">
                 Email
                 <input type="email" className="border rounded w-full py-1 px-2 font-normal" 
-                {...register("email", {required: "Email is required"})}/>
+                {...register("email", {
+                    required: "Email is required"
+                })}/>
+                {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                )}
             </label>
             <label className="text-gray-700 text-sm font-bold flex-1">
                 Password
@@ -44,8 +69,15 @@ export default function Register(){
                     minLength:{
                         value: 8,
                         message: "Password must be at least 8 characters"
+                    },
+                    pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).*$/,
+                        message: "Password must contain at least a small letter, a capital letter, a number and a special character"
                     }
                 })}/>
+                {errors.password && (
+                    <span className="text-red-500">{errors.password.message}</span>
+                )}
             </label>
             <label className="text-gray-700 text-sm font-bold flex-1">
                 Confirm Password
@@ -60,6 +92,9 @@ export default function Register(){
                         }
                     }
                 })}/>
+                {errors.confirmPassword && (
+                    <span className="text-red-500">{errors.confirmPassword.message}</span>
+                )}
             </label>
             <span className="text-center">
                 <button type="submit" className="bg-violet-600 text-white font-bold text-xl px-6 py-1.5 rounded-3xl hover:bg-violet-700">Create Account</button>
