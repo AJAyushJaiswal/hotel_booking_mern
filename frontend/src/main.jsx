@@ -7,6 +7,7 @@ import {createBrowserRouter} from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 
 const router = createBrowserRouter([
@@ -26,8 +27,19 @@ const router = createBrowserRouter([
   }
 ]);
 
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+    },
+  },
+});
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}/>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router}/>
+    </QueryClientProvider>
   </StrictMode>,
 )

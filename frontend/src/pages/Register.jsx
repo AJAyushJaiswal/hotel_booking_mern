@@ -1,11 +1,22 @@
 import {useForm} from 'react-hook-form';
+import {useMutation} from 'react-query';
+import {createUser} from '../apiService.js';
 
 
 export default function Register(){
     const {register, watch, handleSubmit, formState:{errors}} = useForm();
 
-    const onSubmit = handleSubmit((data) => {
-        console.log(data);
+    const mutation = useMutation(createUser, {
+        onSuccess: () => {
+            console.log("registration successful!");
+        },
+        onError: (error) => {
+            console.log(error.message);
+        }
+    });
+
+    const onSubmit = handleSubmit((userData) => {
+        mutation.mutate(userData);
     });
 
 
