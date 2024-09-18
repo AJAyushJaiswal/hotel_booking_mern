@@ -8,6 +8,7 @@ import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {AppContextProvider} from './contexts/AppContext.jsx';
 
 
 const router = createBrowserRouter([
@@ -39,7 +40,9 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}/>
+      <AppContextProvider>
+        <RouterProvider router={router}/>
+      </AppContextProvider>
     </QueryClientProvider>
   </StrictMode>,
 )
