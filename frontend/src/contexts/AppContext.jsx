@@ -1,7 +1,7 @@
-import {useContext} from 'react';
+import {createContext, useContext} from 'react';
 
 
-const AppContext = React.createContext(undefined);
+const AppContext = createContext(undefined);
 
 const AppContextProvider = ({children}) => {
     return (

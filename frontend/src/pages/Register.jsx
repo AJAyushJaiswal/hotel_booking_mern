@@ -1,17 +1,21 @@
 import {useForm} from 'react-hook-form';
 import {useMutation} from 'react-query';
 import {createUser} from '../apiService.js';
+import {useAppContext} from '../contexts/AppContext.jsx';
 
 
 export default function Register(){
     const {register, watch, handleSubmit, formState:{errors}} = useForm();
+    
+    const {showToast} = useAppContext();
 
     const mutation = useMutation(createUser, {
-        onSuccess: () => {
-            console.log("registration successful!");
+        onSuccess: (data) => {
+            showToast({message: data.message, success: data.success});
         },
         onError: (error) => {
-            console.log(error.message);
+            console.log(error);
+            showToast({message: error.message, success: false});
         }
     });
 
