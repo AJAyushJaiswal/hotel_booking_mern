@@ -1,17 +1,22 @@
 import {createContext, useContext, useState} from 'react';
 import Toast from '../components/Toast.jsx';
+import {useQuery} from 'react-query';
+import {validateToken} from '../apiService.js';
 
 
 const AppContext = createContext(undefined);
 
 const AppContextProvider = ({children}) => {
     const [toast, setToast] = useState();
+
+    const {isError} = useQuery("validateToken", validateToken, {retry: false});  
     
     return (
         <AppContext.Provider value={{
             showToast: (toastMessage) => {
                 setToast(toastMessage);
-            }
+            },
+            isLoggedIn: !isError
         }}>
             {toast && (<Toast message={toast.message} success={toast.success} onClose={() => setToast(undefined)}/>)}
             {children}

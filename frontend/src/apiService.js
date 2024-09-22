@@ -20,6 +20,24 @@ const createUser = async (formData) => {
     return responseBody;
 }
 
+
+const validateToken = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/users/validate_token`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+    
+    const responseBody = await response.json();
+    
+    if(!responseBody.success){
+        throw new Error("Invalid token!");
+    }
+
+    return responseBody;
+};
+
+
 export {
-    createUser
+    createUser,
+    validateToken
 }
