@@ -1,3 +1,4 @@
+import {useNavigate} from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import {useMutation} from 'react-query';
 import {createUser} from '../apiService.js';
@@ -6,15 +7,16 @@ import {useAppContext} from '../contexts/AppContext.jsx';
 
 export default function Register(){
     const {register, watch, handleSubmit, formState:{errors}} = useForm();
+    const navigate = useNavigate();
     
     const {showToast} = useAppContext();
 
     const mutation = useMutation(createUser, {
         onSuccess: (data) => {
             showToast({message: data.message, success: data.success});
+            navigate('/');
         },
         onError: (error) => {
-            console.log(error);
             showToast({message: error.message, success: false});
         }
     });
