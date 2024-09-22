@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {registerUser, loginUser, logoutUser, refreshAccessToken} from '../controllers/user.controller.js';
+import {registerUser, loginUser, logoutUser, refreshAccessToken, validateToken} from '../controllers/user.controller.js';
 import {verifyAccessToken} from '../middlewares/auth.middleware.js';
 import {body} from 'express-validator';
 
@@ -48,6 +48,8 @@ router.route('/login').post([
 ], loginUser);
 
 router.route('/logout').post(verifyAccessToken, logoutUser);
+
+router.route('/validate_token').get(verifyAccessToken, validateToken);
 
 
 export default router;

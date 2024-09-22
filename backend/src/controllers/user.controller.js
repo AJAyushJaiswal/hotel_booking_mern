@@ -178,10 +178,16 @@ const refreshAccessToken = asyncHandler(async(req, res) => {
 });
 
 
+const validateToken = asyncHandler(async (req, res) => {
+    res.status(200).json(new ApiResponse(200, req.user._id, "User is logged in!"));
+});
+
+
 
 export {
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    validateToken
 }
