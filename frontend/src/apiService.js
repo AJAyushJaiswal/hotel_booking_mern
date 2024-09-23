@@ -34,10 +34,32 @@ const validateToken = async () => {
     }
 
     return responseBody;
-};
+}
+
+
+const loginUser = async (formData) => {
+    console.log(formData);
+    const response = await fetch(`${API_BASE_URL}/api/v1/users/login`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    }); 
+    
+    const body = await response.json();
+    
+    if(!body.success){
+        throw new Error(body.message);
+    }
+    
+    return body;
+}
 
 
 export {
     createUser,
-    validateToken
+    validateToken,
+    loginUser
 }

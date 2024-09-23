@@ -1,12 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
 import './index.css'
 import {RouterProvider} from 'react-router-dom';
 import {createBrowserRouter} from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
+import LogIn from './pages/LogIn.jsx';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {AppContextProvider} from './contexts/AppContext.jsx';
 
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: 'register',
         element: <Register/>
+      },
+      {
+        path: 'login',
+        element: <LogIn/>
       }
     ]
   }
