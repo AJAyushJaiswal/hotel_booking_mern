@@ -1,8 +1,26 @@
 import {Link, NavLink} from 'react-router-dom';
 import {useAppContext} from '../contexts/AppContext';
+import {useMutation} from 'react-query';
+import {logoutUser} from '../apiService';
+import {useNavigate} from 'react-router-dom';
 
 export default function Header(){
-    const {isLoggedIn} = useAppContext();
+    const {isLoggedIn, showToast} = useAppContext();
+    const navigate = useNavigate();
+    
+    const mutation = useMutation(logoutUser, {
+        onSuccess: (result) => {
+            showToast({message: result.message, success: result.success});
+            navigate('/');
+        },
+        onError: (error) => {
+            showToast({message: error.message, success: false});
+        }
+    });
+    
+    const logout = () => {
+        mutation.mutate();
+    }
 
     return (
         <header className="shadow-md py-5">
@@ -45,7 +63,7 @@ export default function Header(){
                 </div>
         
                 {isLoggedIn ? 
-                    <button to="/logout" className="bg-violet-600 text-white px-5 py-1.5 text-lg font-semibold rounded-3xl hover:bg-violet-700 active:bg-violet-800 ">Logout</button>
+                    <button to="/logout" className="bg-violet-600 text-white px-5 py-1.5 text-lg font-semibold rounded-3xl hover:bg-violet-700 active:bg-violet-800" onClick={logout}>Logout</button>
                 : 
                     <ul className="flex">
                         <li className="mx-2">

@@ -38,7 +38,6 @@ const validateToken = async () => {
 
 
 const loginUser = async (formData) => {
-    console.log(formData);
     const response = await fetch(`${API_BASE_URL}/api/v1/users/login`, {
         method: 'POST',
         credentials: 'include',
@@ -58,8 +57,25 @@ const loginUser = async (formData) => {
 }
 
 
+const logoutUser = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/users/logout`, {
+        method: 'POST',
+        credentials: 'include'
+    });
+
+    const body = await response.json();
+    
+    if(!body.success){
+        throw new Error(body.message);
+    }
+    
+    return body;
+};
+
+
 export {
     createUser,
     validateToken,
-    loginUser
+    loginUser,
+    logoutUser
 }
