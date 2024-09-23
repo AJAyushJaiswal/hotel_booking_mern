@@ -9,11 +9,12 @@ export default function Register(){
     const {register, watch, handleSubmit, formState:{errors}} = useForm();
     const navigate = useNavigate();
     
-    const {showToast} = useAppContext();
+    const {showToast, setIsLoggedIn} = useAppContext();
 
     const mutation = useMutation(createUser, {
         onSuccess: (data) => {
             showToast({message: data.message, success: data.success});
+
             navigate('/');
         },
         onError: (error) => {

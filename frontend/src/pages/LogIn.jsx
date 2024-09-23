@@ -9,11 +9,12 @@ export default function LogIn (){
     const {register, handleSubmit, formState:{errors}} = useForm();
     const navigate = useNavigate();
     
-    const {showToast} = useAppContext();
+    const {showToast, setIsLoggedIn} = useAppContext();
 
     const mutation = useMutation(loginUser, {
         onSuccess: (result) => {
             showToast({message: result.message, success: result.success});
+            setIsLoggedIn();
             navigate('/');
         },
         onError: (error) => {

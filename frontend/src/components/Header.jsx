@@ -5,12 +5,13 @@ import {logoutUser} from '../apiService';
 import {useNavigate} from 'react-router-dom';
 
 export default function Header(){
-    const {isLoggedIn, showToast} = useAppContext();
+    const {isLoggedIn, showToast, setIsLoggedIn} = useAppContext();
     const navigate = useNavigate();
     
     const mutation = useMutation(logoutUser, {
         onSuccess: (result) => {
             showToast({message: result.message, success: result.success});
+            setIsLoggedIn();
             navigate('/');
         },
         onError: (error) => {
