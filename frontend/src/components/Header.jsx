@@ -9,9 +9,9 @@ export default function Header(){
     const navigate = useNavigate();
     
     const mutation = useMutation(logoutUser, {
-        onSuccess: (result) => {
+        onSuccess: async (result) => {
             showToast({message: result.message, success: result.success});
-            setIsLoggedIn();
+            await setIsLoggedIn();
             navigate('/');
         },
         onError: (error) => {

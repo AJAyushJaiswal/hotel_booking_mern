@@ -12,9 +12,9 @@ export default function Register(){
     const {showToast, setIsLoggedIn} = useAppContext();
 
     const mutation = useMutation(createUser, {
-        onSuccess: (data) => {
-            showToast({message: data.message, success: data.success});
-
+        onSuccess: async (result) => {
+            showToast({message: result.message, success: result.success});
+            await setIsLoggedIn();
             navigate('/');
         },
         onError: (error) => {

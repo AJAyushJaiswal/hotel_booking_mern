@@ -12,9 +12,9 @@ export default function LogIn (){
     const {showToast, setIsLoggedIn} = useAppContext();
 
     const mutation = useMutation(loginUser, {
-        onSuccess: (result) => {
+        onSuccess: async (result) => {
             showToast({message: result.message, success: result.success});
-            setIsLoggedIn();
+            await setIsLoggedIn();
             navigate('/');
         },
         onError: (error) => {

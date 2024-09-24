@@ -13,8 +13,8 @@ const AppContextProvider = ({children}) => {
 
     const {isError} = useQuery("validateToken", validateToken, {retry: false});  
     
-    const setIsLoggedIn = () => {
-        queryClient.invalidateQueries('validateToken');        
+    const setIsLoggedIn = async () => {
+        await queryClient.invalidateQueries('validateToken');        
     }
     
     return (
