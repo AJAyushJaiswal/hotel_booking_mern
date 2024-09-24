@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import {errorHandler} from './middlewares/errorHandler.middleware.js';
+import path from 'path';
+import {fileURLToPath} from 'url';
 
 const app = express();
 
@@ -9,7 +11,6 @@ app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
 }));
-console.log(process.env.CORS_ORIGIN);
 
 app.use(express.urlencoded({extended: true}));
 
@@ -17,7 +18,8 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.use(express.static('public'));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 
 // routes
@@ -26,6 +28,6 @@ import userRouter from './routes/user.routes.js';
 app.use('/api/v1/users/', userRouter);
 
 
-//app.use(errorHandler);
+app.use(errorHandler);
 
 export default app;

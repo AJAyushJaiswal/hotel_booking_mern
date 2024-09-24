@@ -99,7 +99,6 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax'
     }
-    console.log(process.env.NODE_ENV === 'production');
 
     res.status(200)
     .cookie("accessToken", accessToken, {...options, maxAge: accessTokenMaxAge})
