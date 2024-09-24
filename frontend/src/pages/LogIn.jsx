@@ -2,7 +2,7 @@ import {useForm} from 'react-hook-form';
 import {useMutation} from 'react-query';
 import {loginUser} from '../apiService.js';
 import {useAppContext} from '../contexts/AppContext.jsx';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 
 
 export default function LogIn (){
@@ -27,9 +27,9 @@ export default function LogIn (){
     });
 
     return (
-        <form className="flex flex-col gap-5 my-16 max-w-lg mx-auto border px-20 py-16 rounded" onSubmit={onSubmit}>
+        <form className="flex flex-col gap-4 my-16 max-w-md mx-auto border px-16 py-16 rounded" onSubmit={onSubmit}>
             <h2 className="text-3xl font-bold text-center mb-8">Login to your account</h2>
-            <label className="text-gray-700 text-sm font-bold flex-1">
+            <label className="text-gray-700 text-sm font-bold flex-1 mx-3">
                 Email 
                 <input type="text" className="border rounded px-2 py-1 w-full font-normal" {...register("email", {
                     required: "Email is required"
@@ -38,7 +38,7 @@ export default function LogIn (){
                     <span className="text-red-500">{errors.email.message}</span>
                 )}
             </label>
-            <label className="text-gray-700 text-sm font-bold flex-1">
+            <label className="text-gray-700 text-sm font-bold flex-1 mx-3">
                 Password 
                 <input type="password" className="border rounded px-2 py-1 w-full font-normal" {...register("password", {
                     required: "Password is required",
@@ -55,8 +55,9 @@ export default function LogIn (){
                     <span className="text-red-500">{errors.password.message}</span>                    
                 )}
             </label>
-            <span className="text-center mt-6">
+            <span className="text-center mt-4">
                 <button type="submit" className="bg-violet-600 text-white font-semibold text-xl px-6 py-1 rounded-3xl hover:bg-violet-700 hover:cursor-pointer ">Login</button>
+                <p className="text-xs">Don't have an account? <Link to="/register" className="underline text-blue-800">Register here</Link></p>
             </span>
         </form>
     )

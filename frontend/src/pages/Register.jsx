@@ -3,6 +3,7 @@ import {useForm} from 'react-hook-form';
 import {useMutation} from 'react-query';
 import {createUser} from '../apiService.js';
 import {useAppContext} from '../contexts/AppContext.jsx';
+import {Link} from 'react-router-dom';
 
 
 export default function Register(){
@@ -28,11 +29,11 @@ export default function Register(){
 
 
     return (
-        <form className="flex flex-col gap-6 my-16 max-w-3xl mx-auto" onSubmit={onSubmit}>
-            <h2 className="text-4xl font-bold text-center">Create an account</h2>
-            <div className="flex flex-col md:flex-row gap-5">
+        <form className="flex flex-col gap-4 my-16 py-14 px-20 max-w-lg mx-auto border rounded" onSubmit={onSubmit}>
+            <h2 className="text-3xl font-bold text-center mb-6">Create an account</h2>
+            <div className="flex flex-col gap-3 md:flex-row">
                 <label className="text-gray-700 text-sm font-bold flex-1">
-                    Firstname
+                    First Name
                     <input type="text" className="border rounded w-full py-1 px-2 font-normal" 
                     {...register("firstName", {
                         required: "First name is required",
@@ -50,7 +51,7 @@ export default function Register(){
                     )} 
                 </label>
                 <label className="text-gray-700 text-sm font-bold flex-1">
-                    Lastname
+                    Last Name
                     <input type="text" className="border rounded w-full py-1 px-2 font-normal" 
                     {...register("lastName", {
                         required: "Last name is required",
@@ -114,8 +115,9 @@ export default function Register(){
                     <span className="text-red-500">{errors.confirmPassword.message}</span>
                 )}
             </label>
-            <span className="text-center">
-                <button type="submit" className="bg-violet-600 text-white font-bold text-xl px-6 py-1.5 rounded-3xl hover:bg-violet-700">Create Account</button>
+            <span className="text-center mt-4">
+                <button type="submit" className="bg-violet-600 text-white font-semibold text-xl px-5 py-1 rounded-3xl hover:bg-violet-700">Create Account</button>
+                <p className="text-xs">Already have an account? <Link to="/login" className="underline text-blue-800">Login here</Link></p>
             </span>
         </form>
     )
