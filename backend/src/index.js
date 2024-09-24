@@ -13,7 +13,7 @@ connectToDB().then(() => {
             process.exit(1);
         })
 
-        let port = process.env.PORT || 8000;
+        let port = process.env.PORT || 7000;
         app.listen(port, ()=> {
             if(!(process.env.NODE_ENV === 'production')){
                 console.log(`Listening at localhost: ${port}!!`);

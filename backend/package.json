@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./src/index.js",
-    "start": "node ./src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
+    "start": "cross-env NODE_ENV=production node ./src/index.js",
     "e2e": "cross-env DOTENV_CONFIG_PATH=.env.e2e nodemon ./src/index.js"
   },
   "author": "Ayush Jaiswal",
