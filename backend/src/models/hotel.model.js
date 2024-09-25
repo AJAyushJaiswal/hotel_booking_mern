@@ -34,18 +34,25 @@ const hotelSchema = new mongoose.Schema({
     },
     starRating: {
         type: Number,
+        enum: [1, 2, 3, 4, 5],
         required: true
     },
     images: [{
         type: String,
         required: true
     }],
+    totalRooms: {
+        type: Number,
+        required: true,
+        min: 1
+    },
     roomsAvailable: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
     contactNo: {
-        type: Number,
+        type: String,
         required: true
     },
     email: {
@@ -56,7 +63,8 @@ const hotelSchema = new mongoose.Schema({
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     facilities: [{
         type: String,
