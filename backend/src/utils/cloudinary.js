@@ -1,5 +1,4 @@
 import {v2 as cloudinary} from 'cloudinary';
-import fs from 'fs';
 
 
 cloudinary.config({
@@ -8,28 +7,30 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadToCloudinary = async (localFilePath) => {
-    try{
-        if(!localFilePath){
-            return null;
+const uploadToCloudinary = async (image) => {
+    return new Promise((res, rej) => {
+        if(!image || !image.buffer){
+            return rej(new Error('Image buffer not provided!'));
         }
         
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: 'image'
+        const stream = cloudinary.uploader.upload_stream({
+            resource_type: 'image',
+            folder: 'hotelGod'
+        },
+        (error, result) => {
+            if(error){
+                if(process.env.NODE_ENV !== 'production'){
+                    console.log('Error uploading to cloudinary!');
+                    console.log(error);
+                }
+                return rej(new Error('Error uploading image to cloudinary!\n'));
+            }
+
+            return res(result);
         });
         
-        fs.unlinkSync(localFilePath);
-        
-        return response;
-    }
-    catch(error){
-        if(!(process.env.NODE_ENV === 'production')){
-            console.log(error);
-        }
-        fs.unlinkSync(localFilePath);
-        
-        return null;
-    }
+        stream.end(image.buffer);
+    });
 }
 
 
