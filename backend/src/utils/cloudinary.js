@@ -26,7 +26,7 @@ const uploadToCloudinary = async (image) => {
                 return rej(new Error('Error uploading image to cloudinary!\n'));
             }
 
-            return res(result);
+            return res(result.url);
         });
         
         stream.end(image.buffer);
