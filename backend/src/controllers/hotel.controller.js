@@ -16,19 +16,21 @@ const createHotel = asyncHandler(async (req, res) => {
    
     const images = req.files;
     if(!images || images.length === 0){
-        throw new ApiError('Images are required!');
+        throw new ApiError(400, 'Images are required!');
     }
     
     const uploadPromises = images.map((image) => {
         return uploadToCloudinary(image);
     });
-    
-    const uploadUrls = await Promise.all(uploadPromises); 
-    if(!uploadUrls){
-        throw new ApiError(400, 'Failed to upload images!');
+   
+    try{
+        var uploadUrls = await Promise.all(uploadPromises); 
+    }
+    catch(error){
+        throw new ApiError(500, 'Failed to upload images!');
     }
 
-    const hotel = await Hotel.create({name, address, city, country, type, description, starRating, contactNo, email, owner: req.user._id, email, facilities, images: uploadUrls});
+    const hotel = await Hotel.create({name, address, city, country, type, description, starRating, contactNo, email, owner: req.user._id, facilities, images: uploadUrls});
     
     if(!hotel){
         throw new ApiError(400, 'Failed to add hotel!');
