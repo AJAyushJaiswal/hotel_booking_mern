@@ -24,8 +24,10 @@ app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
 // routes
 import userRouter from './routes/user.routes.js';
+import hotelRouter from './routes/hotel.routes.js';
 
 app.use('/api/v1/users/', userRouter);
+app.use('/api/v1/hotels/', hotelRouter);
 
 
 app.use(errorHandler);
