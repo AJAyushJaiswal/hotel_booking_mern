@@ -3,14 +3,15 @@ import {verifyAccessToken} from '../middlewares/auth.middleware.js';
 import {createHotel} from '../controllers/hotel.controller.js';
 import {body} from 'express-validator';
 import {upload} from '../middlewares/multer.middleware.js';
-
+import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
 
 
 const router = Router();
 
-
-router.route('/add').post(verifyAccessToken, 
+router.route('/add').post(
+    verifyAccessToken, 
     upload.array('images', 6),
+    validateImage,
     [
         body('name')
         .notEmpty().withMessage('Hotel name is required!'),
