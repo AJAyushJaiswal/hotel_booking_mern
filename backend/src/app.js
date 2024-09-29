@@ -18,8 +18,10 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+if(process.env.NODE_ENV !== 'production'){
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+}
 
 
 // routes
