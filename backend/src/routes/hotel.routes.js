@@ -4,6 +4,7 @@ import {createHotel} from '../controllers/hotel.controller.js';
 import {body} from 'express-validator';
 import {upload} from '../middlewares/multer.middleware.js';
 import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
+import {hotelTypesList, countriesList, countryCityObjectList} from '../constants/hotel.constants.js';
 
 
 const router = Router();
@@ -14,24 +15,35 @@ router.route('/add').post(
     validateImage,
     [
         body('name')
-        .notEmpty().withMessage('Hotel name is required!'),
+        .notEmpty().withMessage('Hotel name is required!')
+        .isLength({min: 5, max: 50}).withMessage('Name must be between 5-50 characters!'),
 
         body('address')
         .notEmpty().withMessage('Address is required!')
-        .isLength({max: 50}).withMessage('Address can\'t be more than 50 characters!'),
-
-        body('city')
-        .notEmpty().withMessage('City is required!'),
+        .isLength({min: 10, max: 80}).withMessage('Address must be between 10-80 characters!'),
 
         body('country')
-        .isIn(['India', 'Sri Lanka', 'US', 'UK', 'Japan', 'South Korea', 'UAE', 'Egypt', 'South Africa', 'Maldives', 'Bahamas']).withMessage('Invalid country option! Select from the listed countries'),
+        .isIn(countriesList).withMessage('Invalid country! Select a valid option'),
 
+        body('city')
+        .isString().notEmpty().withMessage('City is required!')
+        .custom((value, {req}) => {
+            const country = req.body.country;
+            const cities = countryCityObjectList[country];
+            
+            if(!cities.includes(value)){
+                throw new Error('Invalid city! Select a valid option');
+            }
+
+            return true;
+        }),
+        
         body('type')
-        .isIn(['budget', 'boutique', 'luxury', 'resort', 'apartment', 'spa', 'vacation', 'business', 'hostel']).withMessage('Invalid hotel type! Select from the listed hotel types'),
+        .isIn(hotelTypesList).withMessage('Invalid hotel type! Select a valid option'),
 
         body('description')
         .notEmpty().withMessage('Description is required!')
-        .isLength({max: 200}).withMessage('Description can\'t be more than 200 characters!'),
+        .isLength({min: 50, max: 300}).withMessage('Description must be between 50-200 characters!'),
 
         body('starRating')
         .trim()
