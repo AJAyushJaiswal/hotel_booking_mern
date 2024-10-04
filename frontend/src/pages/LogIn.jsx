@@ -1,6 +1,6 @@
 import {useForm} from 'react-hook-form';
 import {useMutation} from 'react-query';
-import {loginUser} from '../apiService.js';
+import {loginUser} from '../api-services/user.api-services.js';
 import {useAppContext} from '../contexts/AppContext.jsx';
 import {useNavigate, Link} from 'react-router-dom';
 

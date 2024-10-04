@@ -1,7 +1,7 @@
 import {Link, NavLink} from 'react-router-dom';
 import {useAppContext} from '../contexts/AppContext';
 import {useMutation} from 'react-query';
-import {logoutUser} from '../apiService';
+import {logoutUser} from '../api-services/user.api-services.js';
 import {useNavigate} from 'react-router-dom';
 
 export default function Header(){

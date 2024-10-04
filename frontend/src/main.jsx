@@ -3,12 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import {RouterProvider} from 'react-router-dom';
 import {createBrowserRouter} from 'react-router-dom';
+import {QueryClient, QueryClientProvider} from 'react-query';
+import {AppContextProvider} from './contexts/AppContext.jsx';
 import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
 import LogIn from './pages/LogIn.jsx';
-import {QueryClient, QueryClientProvider} from 'react-query';
-import {AppContextProvider} from './contexts/AppContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import AddHotel from './pages/AddHotel.jsx';
 
 
 const router = createBrowserRouter([
@@ -27,6 +29,16 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <LogIn/>
+      }
+    ]
+  },
+  {
+    path: '/my_hotels',
+    element: <ProtectedRoute><Layout/></ProtectedRoute>,
+    children: [
+      {
+        path: 'add',
+        element: <AddHotel/>
       }
     ]
   }

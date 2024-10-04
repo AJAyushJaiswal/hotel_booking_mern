@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import {useMutation} from 'react-query';
-import {createUser} from '../apiService.js';
+import {createUser} from '../api-services/user.api-services.js';
 import {useAppContext} from '../contexts/AppContext.jsx';
 import {Link} from 'react-router-dom';
 

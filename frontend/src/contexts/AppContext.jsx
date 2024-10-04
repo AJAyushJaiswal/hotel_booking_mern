@@ -1,7 +1,7 @@
 import {createContext, useContext, useState} from 'react';
 import Toast from '../components/Toast.jsx';
 import {useQuery, useQueryClient} from 'react-query';
-import {validateToken} from '../apiService.js';
+import {validateToken} from '../api-services/user.api-services.js';
 
 
 const AppContext = createContext(undefined);
