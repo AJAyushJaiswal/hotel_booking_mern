@@ -6,6 +6,14 @@ import {validationResult} from 'express-validator';
 import {uploadToCloudinary} from '../utils/cloudinary.js';
 
 
+
+const getHotels = asyncHandler(async (req, res) => {
+    const hotels = await Hotel.find({owner: req.user._id}, {__v: 0}).lean();
+    
+    return res.status(200).json(new ApiResponse(200, hotels, "Hotels fetched successfully!"));
+})
+
+
 const createHotel = asyncHandler(async (req, res) => {
     const result = validationResult(req);
     if(!result.isEmpty()){
@@ -41,5 +49,6 @@ const createHotel = asyncHandler(async (req, res) => {
 
 
 export {
+    getHotels,
     createHotel
 }
