@@ -6,7 +6,7 @@ import ContactSection from './ContactSection.jsx';
 import ImagesSection from './ImagesSection.jsx';
 
 
-export default function ManageHotelForm({onSave}){
+export default function ManageHotelForm({onSave, isLoading}){
     const formMethods = useForm();
     
     const submitForm = formMethods.handleSubmit((hotelData) => {
@@ -42,7 +42,7 @@ export default function ManageHotelForm({onSave}){
                 <ImagesSection/>
 
                 <div className="text-center">
-                    <button type="submit" className="bg-violet-600 text-white px-7 py-1 font-semibold text-xl rounded-3xl">Save</button> 
+                    <button type="submit" disabled={isLoading} className="bg-violet-600 text-white px-7 py-1 font-semibold text-xl rounded-3xl disabled:bg-violet-500">{isLoading ? 'Saving...' : 'Save'}</button> 
                 </div>
             </form> 
 

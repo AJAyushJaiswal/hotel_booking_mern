@@ -20,6 +20,6 @@ export default function AddHotel(){
     }
 
     return(
-        <ManageHotelForm onSave={handleSaveHotel}/>
+        <ManageHotelForm onSave={handleSaveHotel} isLoading={isLoading}/>
     ); 
 }
