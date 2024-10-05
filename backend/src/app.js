@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-if(process.env.NODE_ENV !== 'production'){
+if(process.env.NODE_ENV === 'production'){
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 }
@@ -30,6 +30,15 @@ import hotelRouter from './routes/hotel.routes.js';
 
 app.use('/api/v1/users/', userRouter);
 app.use('/api/v1/hotels/', hotelRouter);
+
+
+if(process.env.NODE_ENV === 'production'){
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../../frontend/dist', 'index.html'));
+    })
+}
 
 
 app.use(errorHandler);
