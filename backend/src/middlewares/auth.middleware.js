@@ -26,11 +26,16 @@ const verifyAccessToken = asyncHandler(async (req, _, next) => {
         next();
     }
     catch(error){
+        console.log(error);
         if(error instanceof jwt.TokenExpiredError){
-            console.log(401, "Invalid access token!");
+            if(process.env.NODE_ENV !== 'production'){
+                console.log("Access token expired!");
+            }
         }
         else if(error instanceof jwt.JsonWebTokenError){
-            console.log(401, "Invalid access token!");
+            if(process.env.NODE_ENV !== 'production'){
+                console.log("Invalid access token!");
+            }
         }
         throw new ApiError(401, "Unauthorised request!");
     }

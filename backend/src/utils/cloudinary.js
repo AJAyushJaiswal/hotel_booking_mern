@@ -15,7 +15,7 @@ const uploadToCloudinary = async (image) => {
         
         const stream = cloudinary.uploader.upload_stream({
             resource_type: 'image',
-            folder: 'hotelGod'
+            folder: process.env.NODE_ENV === 'production' ? 'hotelGod' : 'hotelGod/test'
         },
         (error, result) => {
             if(error){
