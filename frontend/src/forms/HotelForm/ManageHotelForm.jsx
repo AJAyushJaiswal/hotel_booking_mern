@@ -1,7 +1,7 @@
 import {FormProvider, useForm} from 'react-hook-form';
 import DetailsSection from './DetailsSection.jsx';
 import TypeSection from './TypeSection.jsx';
-import FacilitiesSection from './facilitiesSection.jsx';
+import FacilitiesSection from './FacilitiesSection.jsx';
 import ContactSection from './ContactSection.jsx';
 import ImagesSection from './ImagesSection.jsx';
 
