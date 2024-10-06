@@ -23,8 +23,8 @@ export default function MyHotels(){
             </div>
             {!hotelData?.data?.length ? <div className='mt-24 text-center text-md text-gray-600'>No Hotels found</div> : 
                 <div className="mt-10">
-                    {hotelData.data.map((hotel) => (
-                        <div className="border border-gray-300 px-10 py-6 mb-12">
+                    {hotelData.data.map((hotel, index) => (
+                        <div key={index} className="border border-gray-300 px-10 py-6 mb-12">
                             <div className="flex justify-between">
                                 <div className="mb-4">
                                     <h3 className="text-lg font-semibold leading-3">{hotel.name}</h3> 
@@ -35,11 +35,11 @@ export default function MyHotels(){
                                     <Link to={`./${hotel._id}`} className="mr-1.5">
                                         <svg fill="#8a3aee" width={23} height={23} viewBox="0 0 36.00 36.00" version="1.1" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" stroke="#8a3aee" strokeWidth="0.00036">
                                             <g strokeWidth="0"/>
-                                            <g strokeLinecap="round" stroke-linejoin="round"/>
+                                            <g strokeLinecap="round" strokeLinejoin="round"/>
                                             <g id="SVGRepo_iconCarrier"><path d="M32,6H4A2,2,0,0,0,2,8V28a2,2,0,0,0,2,2H32a2,2,0,0,0,2-2V8A2,2,0,0,0,32,6Zm0,22H4V8H32Z"/>
-                                            <path d="M9,14H27a1,1,0,0,0,0-2H9a1,1,0,0,0,0,2Z" class="clr-i-outline clr-i-outline-path-2"/>
-                                            <path d="M9,18H27a1,1,0,0,0,0-2H9a1,1,0,0,0,0,2Z" class="clr-i-outline clr-i-outline-path-3"/>
-                                            <path d="M9,22H19a1,1,0,0,0,0-2H9a1,1,0,0,0,0,2Z" class="clr-i-outline clr-i-outline-path-4"/> <rect x="0" y="0" width="36" height="36" fill-opacity="0"/> </g>
+                                            <path d="M9,14H27a1,1,0,0,0,0-2H9a1,1,0,0,0,0,2Z"/>
+                                            <path d="M9,18H27a1,1,0,0,0,0-2H9a1,1,0,0,0,0,2Z"/>
+                                            <path d="M9,22H19a1,1,0,0,0,0-2H9a1,1,0,0,0,0,2Z"/> <rect x="0" y="0" width="36" height="36" fillOpacity="0"/> </g>
                                         </svg>
                                     </Link>
                                     {/* Update Hotel Button */}
@@ -47,7 +47,7 @@ export default function MyHotels(){
                                         <svg width={21} height={21} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="">
                                             <g strokeWidth="0"/>
                                             <g strokeLinecap="round" strokeLinejoin="round"/>
-                                            <g> <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="#863aee" strokeWidth="1.5" stroke-inecap="round" strokeLinejoin="round"/> <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="#863aee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/> </g>
+                                            <g> <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="#863aee" strokeWidth="1.5" strokeinecap="round" strokeLinejoin="round"/> <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="#863aee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/> </g>
                                         </svg>
                                     </Link>
                                     {/* Delete Hotel Button */}
