@@ -34,7 +34,8 @@ const hotelSchema = new mongoose.Schema({
     },
     starRating: {
         type: Number,
-        enum: [1, 2, 3, 4, 5]
+        enum: [0, 1, 2, 3, 4, 5],
+        default: 0
     },
     images: [{
         type: String,
@@ -42,11 +43,13 @@ const hotelSchema = new mongoose.Schema({
     }],
     totalRooms: {
         type: Number,
-        min: 1
+        min: 0,
+        default: 0
     },
     availableRooms: {
         type: Number,
-        min: 0
+        min: 0,
+        default: 0
     },
     contactNo: {
         type: String,
