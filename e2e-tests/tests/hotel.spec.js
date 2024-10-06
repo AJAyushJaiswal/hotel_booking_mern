@@ -45,4 +45,12 @@ test('should allow user to add a hotel', async ({page}) => {
     await expect(page.getByRole('button', {name: 'Saving...'})).toBeDisabled();
     await expect(page.getByRole('button', {name: 'Saving...'})).toBeVisible();
     await expect(page.getByText('Hotel added successfully!')).toBeVisible();
-})
+});
+
+
+test('should display all user hotels', async ({page}) => {
+    await page.getByRole('link', {name: 'My Hotels'}).click();
+    
+    await expect(page.getByRole('heading', {name: 'My Hotels'})).toBeVisible();
+    await expect(page.getByRole('link', {name: 'Add Hotel'})).toBeVisible();
+});
