@@ -31,7 +31,7 @@ export default function MyHotels(){
                         <div className="flex justify-between">
                             <div className="mb-4">
                                 <h3 className="text-lg font-semibold leading-3">{hotel.name}</h3> 
-                                <span className="text-sm">{`${hotel.address}, ${hotel.city}, ${hotel.country}`}</span> 
+                                <span className="text-sm">{hotel.address}, {hotel.city},{hotel.country}</span> 
                             </div>
                             <div className="flex">
                                 {/* View Full Details Button */}

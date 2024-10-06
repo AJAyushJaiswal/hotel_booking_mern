@@ -11,7 +11,7 @@ const addHotel = async (hotelFormData) => {
     
     const result = await response.json();
     
-    if(result.success !== true){
+    if(!result.success){
         throw new Error(result.message);
     }
     
