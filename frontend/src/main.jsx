@@ -11,6 +11,7 @@ import Register from './pages/Register.jsx';
 import LogIn from './pages/LogIn.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AddHotel from './pages/AddHotel.jsx';
+import MyHotels from './pages/MyHotels.jsx';
 
 
 const router = createBrowserRouter([
@@ -33,9 +34,13 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: '/my_hotels',
+    path: '/hotels',
     element: <ProtectedRoute><Layout/></ProtectedRoute>,
     children: [
+      {
+        index: true,
+        element: <MyHotels/>
+      },
       {
         path: 'add',
         element: <AddHotel/>

@@ -18,7 +18,23 @@ const addHotel = async (hotelFormData) => {
     return result;
 }
 
+const getMyHotels = async() => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/hotels/`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+    
+    const result = await response.json();
+    
+    if(!result.success){
+        throw new Error(result.message);
+    }
+    
+    return result;
+}
+
 
 export {
-    addHotel
+    addHotel,
+    getMyHotels
 }
