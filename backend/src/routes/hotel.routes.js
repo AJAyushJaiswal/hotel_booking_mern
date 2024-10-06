@@ -49,7 +49,7 @@ router.route('/add').post(
 
         body('starRating')
         .trim()
-        .isIn([1, 2, 3, 4, 5, '']).withMessage('Star rating can only be an integer in range of 1-5!')
+        .isIn([0, 1, 2, 3, 4, 5]).withMessage('Star rating can only be an integer in range of 1-5!')
         .optional(),
 
         body('contactNo').notEmpty().withMessage('Contact no. is required!'),
