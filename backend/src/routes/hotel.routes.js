@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {verifyAccessToken} from '../middlewares/auth.middleware.js';
-import {getMyHotels, createHotel} from '../controllers/hotel.controller.js';
+import {getMyHotels, getHotel, createHotel} from '../controllers/hotel.controller.js';
 import {body} from 'express-validator';
 import {upload} from '../middlewares/multer.middleware.js';
 import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
@@ -10,6 +10,8 @@ import {hotelTypesList, countriesList, countryCityObjectList} from '../constants
 const router = Router();
 
 router.route('/').get(verifyAccessToken, getMyHotels);
+
+router.route('/:hotelId').get(verifyAccessToken, getHotel);
 
 router.route('/add').post(
     verifyAccessToken, 

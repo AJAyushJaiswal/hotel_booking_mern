@@ -14,6 +14,25 @@ const getMyHotels = asyncHandler(async (req, res) => {
 })
 
 
+const getHotel = asyncHandler(async (req, res) => {
+    const hotelId = req?.params?.hotelId;
+    
+    if(!hotelId){
+        throw new ApiError('Hotel Id is required!');
+    }
+    
+    const hotel = await Hotel.findOne({_id: hotelId, owner:req.user._id}).select('-__v -totalRooms -availableRooms').lean();
+    
+    if(!hotel){
+        throw new ApiError('Invalid Hotel Id!');
+    }
+    
+    delete hotel._doc.owner;
+    
+    return res.status(200).json(new ApiResponse(200, hotel, "Hotel fetched successfully!"));
+})
+
+
 const createHotel = asyncHandler(async (req, res) => {
     const result = validationResult(req);
     if(!result.isEmpty()){
@@ -50,5 +69,6 @@ const createHotel = asyncHandler(async (req, res) => {
 
 export {
     getMyHotels,
+    getHotel,
     createHotel
 }
