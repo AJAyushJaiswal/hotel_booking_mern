@@ -102,7 +102,15 @@ export default function DetailsSection(){
                 <label className="text-sm font-bold flex-1">
                     <span className="">Star Rating</span>
                     
-                    <select name="" className="border rounded border-gray-700 mx-2 px-1 font-normal py-0.5" {...register("starRating")}>
+                    <select name="" className="border rounded border-gray-700 mx-2 px-1 font-normal py-0.5" {...register("starRating", {
+                        validate: (value) => {
+                            if(value && ![1,2,3,4,5].includes(value)){
+                                return 'Star rating must be in range of 1-5'
+                            }
+                            
+                            return true;
+                        }
+                    })}>
                         <option value="" className="text-sm font-bold">No Star Rating</option>
                         {[1, 2, 3, 4, 5].map((star) => (
                             <option key={star} value={star}>{star}</option>

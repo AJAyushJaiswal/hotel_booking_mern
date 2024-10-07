@@ -10,6 +10,7 @@ export default function ManageHotelForm({onSave, isLoading}){
     const formMethods = useForm();
     
     const submitForm = formMethods.handleSubmit((hotelData) => {
+
         const formData = new FormData();
         formData.append('name', hotelData.name);
         formData.append('address', hotelData.address);
@@ -18,7 +19,7 @@ export default function ManageHotelForm({onSave, isLoading}){
         formData.append('description', hotelData.description);
         formData.append('contactNo', hotelData.contactNo);
         formData.append('email', hotelData.email);
-        formData.append('starRating', hotelData.starRating);
+        if([1,2,3,4,5].includes(hotelData.starRating)) formData.append('starRating', hotelData.starRating);
         formData.append('type', hotelData.type);
 
         hotelData.facilities.forEach((facility, index) => {
