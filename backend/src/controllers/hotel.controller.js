@@ -4,6 +4,7 @@ import {ApiResponse} from '../utils/ApiResponse.js';
 import {Hotel} from '../models/hotel.model.js';
 import {validationResult} from 'express-validator';
 import {uploadToCloudinary} from '../utils/cloudinary.js';
+import {isValidObjectId} from 'mongoose';
 
 
 
@@ -15,19 +16,23 @@ const getMyHotels = asyncHandler(async (req, res) => {
 
 
 const getHotel = asyncHandler(async (req, res) => {
-    const hotelId = req?.params?.hotelId;
+    const hotelId = req.params?.hotelId;
     
     if(!hotelId){
-        throw new ApiError('Hotel Id is required!');
+        throw new ApiError(400, 'Hotel Id is required!');
+    }
+    
+    if(!isValidObjectId(hotelId)){
+        throw new ApiError(400, 'Invalid Hotel Idddddddd!');
     }
     
     const hotel = await Hotel.findOne({_id: hotelId, owner:req.user._id}).select('-__v -totalRooms -availableRooms').lean();
     
     if(!hotel){
-        throw new ApiError('Invalid Hotel Id!');
+        throw new ApiError(400, 'Invalid Hotel Id!');
     }
     
-    delete hotel._doc.owner;
+    delete hotel.owner;
     
     return res.status(200).json(new ApiResponse(200, hotel, "Hotel fetched successfully!"));
 })
