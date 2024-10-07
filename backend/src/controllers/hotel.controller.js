@@ -8,7 +8,7 @@ import {uploadToCloudinary} from '../utils/cloudinary.js';
 
 
 const getMyHotels = asyncHandler(async (req, res) => {
-    const hotels = await Hotel.find({owner: req.user._id}, {__v: 0, }).lean();
+    const hotels = await Hotel.find({owner: req.user._id}, {__v: 0, description: 0, images: 0, contactNo: 0, email: 0, owner: 0, facilities: 0}).lean();
     
     return res.status(200).json(new ApiResponse(200, hotels, "Hotels fetched successfully!"));
 })
