@@ -34,8 +34,7 @@ const hotelSchema = new mongoose.Schema({
     },
     starRating: {
         type: Number,
-        enum: [0, 1, 2, 3, 4, 5],
-        default: 0
+        enum: [1, 2, 3, 4, 5]
     },
     images: [{
         type: String,
