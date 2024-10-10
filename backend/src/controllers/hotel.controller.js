@@ -3,7 +3,7 @@ import {ApiError} from '../utils/ApiError.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {Hotel} from '../models/hotel.model.js';
 import {validationResult} from 'express-validator';
-import {uploadToCloudinary} from '../utils/cloudinary.js';
+import {uploadToCloudinary, deleteFromCloudinary} from '../utils/cloudinary.js';
 import {isValidObjectId} from 'mongoose';
 
 
@@ -72,8 +72,62 @@ const createHotel = asyncHandler(async (req, res) => {
 });
 
 
+const updateHotel = asyncHandler(async (req, res) => {
+    const valResult = validationResult(req);
+    if(!valResult.isEmpty()){
+        throw new ApiError(400, "Invalid hotel data!", valResult.errors);
+    }
+    
+    const hotelId = req.params?.hotelId;
+    if(!hotelId || !isValidObjectId(hotelId)){
+        throw new ApiError(400, "Invalid Hotel Id!");
+    }
+    
+    const currentHotel = await Hotel.findOne({_id: hotelId, owner: req.user._id}).select('images').lean();
+    if(!currentHotel){
+        throw new ApiError(400, "Invalid Hotel Id!");
+    }
+
+    const {name, address, city, country, description, type, starRating, contactNo, email, facilities, images: imageUrls} = req.body;
+
+    const imageFiles = req.files;
+
+    if((!imageFiles || imageFiles.length === 0) && (!imageUrls || !imageUrls.length === 0)){
+        throw new ApiError(400, "Images are required!");
+    }
+    
+    try{
+        const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));
+        const newImageUrls = await Promise.all(imageUploadPromises);
+        
+        
+        const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {name, address, city, country, description, type, starRating, contactNo, email, facilities, images: [...imageUrls, ...newImageUrls]}).lean();
+
+        if(hotelUpdateResult.modifiedCount === 0){
+            throw new ApiError(400, "Error updating hotel!");
+        }
+
+        const imagesToDelete = currentHotel.images?.filter((url) => !imageUrls.includes(url)) || [];
+        
+        const imageDeletePromises = imagesToDelete.map((url) => deleteFromCloudinary(url));
+        await Promise.all(imageDeletePromises);
+    
+        res.status(200).json(new ApiResponse(200, "Hotel updated successfully!"));
+    }
+    catch(error){
+        console.log(error);
+        if(error instanceof ApiError){
+            throw new ApiError(error.statusCode, error.message);
+        }    
+        
+        throw new ApiError(500, "Internal Server Error!");
+    }
+});
+
+
 export {
     getMyHotels,
     getHotel,
-    createHotel
+    createHotel,
+    updateHotel
 }

@@ -34,6 +34,34 @@ const uploadToCloudinary = async (image) => {
 }
 
 
+const deleteFromCloudinary = async (imageUrl) => {
+    return new Promise((res, rej) => {
+        if(!imageUrl){
+            return rej(new Error('Image URL not provided!'));
+        }
+
+        const publicId = imageUrl.split('/').pop().split('.')[0];
+        
+        cloudinary.uploader.destroy(publicId, {
+            resource_type: 'image',
+            folder: process.env.NODE_ENV === 'production' ? 'hotelGod' : 'hotelGod/test'
+        }, (error, result) => {
+            if(error || result.result != 'ok'){
+                if(process.env.NODE_ENV !== 'production'){
+                    console.log('RESULT: ', result);
+                    console.log('ERROR: ', error);
+                }
+
+                return rej(new Error('Error deleting image from cloudinary!'));
+            }
+
+            return res();
+        });
+    });
+}
+
+
 export {
-    uploadToCloudinary
+    uploadToCloudinary,
+    deleteFromCloudinary
 }
