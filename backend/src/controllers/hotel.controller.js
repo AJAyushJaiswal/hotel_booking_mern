@@ -125,9 +125,37 @@ const updateHotel = asyncHandler(async (req, res) => {
 });
 
 
+const deleteHotel = asyncHandler(async (req, res) => {
+    const hotelId = req.params?.hotelId;
+    
+    if(!hotelId || !isValidObjectId(hotelId)){
+        throw new ApiError(400, "Invalid Hotel Id!");
+    }
+    
+    const deletedHotel = await Hotel.findOneAndDelete({_id: hotelId, owner: req.user._id}).select('images').lean();
+    
+    if(!deletedHotel){
+        throw new ApiError(400, "Error deleting hotel!");
+    }
+
+    try{
+        const deletePromises = deletedHotel.images.map(url => deleteFromCloudinary(url)); 
+        await Promise.all(deletePromises);
+    }
+    catch(error){
+        if(process.env.NODE_ENV !== 'production') console.log(error);
+
+        throw new ApiError(500, "Error deleting hotel!");
+    }
+    
+    res.status(200).json(new ApiResponse(200, null, "Hotel deleted successfully!"));
+});
+
+
 export {
     getMyHotels,
     getHotel,
     createHotel,
-    updateHotel
+    updateHotel,
+    deleteHotel
 }
