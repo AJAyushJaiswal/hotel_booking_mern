@@ -112,7 +112,7 @@ const updateHotel = asyncHandler(async (req, res) => {
         const imageDeletePromises = imagesToDelete.map((url) => deleteFromCloudinary(url));
         await Promise.all(imageDeletePromises);
     
-        res.status(200).json(new ApiResponse(200, "Hotel updated successfully!"));
+        res.status(200).json(new ApiResponse(200, null, "Hotel updated successfully!"));
     }
     catch(error){
         console.log(error);
