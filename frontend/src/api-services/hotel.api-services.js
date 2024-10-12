@@ -54,7 +54,7 @@ const updateHotel = async ({hotelId, hotelFormData}) => {
     console.log(hotelId);
     console.log(hotelFormData.entries());
     
-    const response = await fetch(`${API_BASE_URL}/api/v1/hotels/update/${hotelId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/hotels/${hotelId}`, {
         method: 'PUT',
         credentials: 'include',
         body: hotelFormData
