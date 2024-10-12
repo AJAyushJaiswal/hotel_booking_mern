@@ -27,13 +27,11 @@ const validateToken = async () => {
         credentials: 'include'
     });
     
-    const responseBody = await response.json();
-    
-    if(!responseBody.success){
-        throw new Error("Invalid token!");
+    if(!response.ok){
+        throw new Error("Invalid Token!");
     }
 
-    return responseBody;
+    return;
 }
 
 

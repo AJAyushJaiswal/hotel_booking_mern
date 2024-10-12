@@ -25,8 +25,8 @@ export default function ManageHotelForm({onSave, isLoading, hotelData}){
         formData.append('email', newHotelData.email);
         if([1,2,3,4,5].includes(Number(newHotelData.starRating))){formData.append('starRating', newHotelData.starRating)};
         formData.append('type', newHotelData.type);
-
-        newHotelData.facilities?.forEach((facility, index) => {
+        
+        Array.from(newHotelData.facilities)?.forEach((facility, index) => {
             formData.append(`facilities[${index}]`, facility);
         });
 
@@ -34,11 +34,9 @@ export default function ManageHotelForm({onSave, isLoading, hotelData}){
             formData.append(`imageFiles`, image);
         })
         
-        if(newHotelData.images){
-            newHotelData.images.forEach((imageUrl, index) => {
-                formData.append(`images[${index}]`, imageUrl);
-            })
-        }
+        newHotelData.images?.forEach((imageUrl, index) => {
+            formData.append(`images[${index}]`, imageUrl);
+        })
 
         onSave(formData);
     });
