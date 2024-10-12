@@ -40,7 +40,7 @@ const deleteFromCloudinary = async (imageUrl) => {
             return rej(new Error('Image URL not provided!'));
         }
 
-        const publicId = imageUrl.split('/').pop().split('.')[0];
+        const publicId = `hotelGod/test/${imageUrl.split('/').pop().split('.')[0]}`;
         
         cloudinary.uploader.destroy(publicId, {
             resource_type: 'image',
