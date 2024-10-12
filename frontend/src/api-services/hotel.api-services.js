@@ -34,7 +34,45 @@ const getMyHotels = async() => {
 }
 
 
+const getHotel = async (hotelId) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/hotels/${hotelId}`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+    
+    const result = await response.json();
+    
+    if(!result.success){
+        throw new Error(result.message);
+    }
+    
+    return result.data;
+}
+
+
+const updateHotel = async ({hotelId, hotelFormData}) => {
+    console.log(hotelId);
+    console.log(hotelFormData.entries());
+    
+    const response = await fetch(`${API_BASE_URL}/api/v1/hotels/update/${hotelId}`, {
+        method: 'PUT',
+        credentials: 'include',
+        body: hotelFormData
+    });
+    
+    const result = await response.json();
+    
+    if(!result.success){
+        throw new Error(result.message);
+    }
+    
+    return result;
+}
+
+
 export {
     addHotel,
-    getMyHotels
+    getMyHotels,
+    getHotel,
+    updateHotel
 }

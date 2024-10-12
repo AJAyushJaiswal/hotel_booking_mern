@@ -43,7 +43,7 @@ export default function MyHotels(){
                                         </svg>
                                     </Link>
                                     {/* Update Hotel Button */}
-                                    <Link to="./update" className="mr-1.5">
+                                    <Link to={`./edit/${hotel._id}`} className="mr-1.5">
                                         <svg width={21} height={21} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="">
                                             <g strokeWidth="0"/>
                                             <g strokeLinecap="round" strokeLinejoin="round"/>

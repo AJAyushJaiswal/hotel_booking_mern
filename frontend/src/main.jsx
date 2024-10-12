@@ -12,6 +12,7 @@ import LogIn from './pages/LogIn.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AddHotel from './pages/AddHotel.jsx';
 import MyHotels from './pages/MyHotels.jsx';
+import EditHotel from './pages/EditHotel.jsx';
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: 'add',
         element: <AddHotel/>
+      },
+      {
+        path: 'edit/:hotelId',
+        element: <EditHotel/>
       }
     ]
   }
