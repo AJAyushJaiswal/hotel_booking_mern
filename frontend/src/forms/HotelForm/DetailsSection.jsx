@@ -104,8 +104,8 @@ export default function DetailsSection(){
                     
                     <select name="" className="border rounded border-gray-700 mx-2 px-1 font-normal py-0.5" {...register("starRating", {
                         validate: (value) => {
-                            if(value && ![1,2,3,4,5].includes(value)){
-                                return 'Star rating must be in range of 1-5'
+                            if(value && !([1,2,3,4,5].includes(Number(value)))){
+                                return 'Star rating must be in range of 1-5';
                             }
                             
                             return true;

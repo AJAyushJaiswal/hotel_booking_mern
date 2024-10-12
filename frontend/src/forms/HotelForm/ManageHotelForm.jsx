@@ -23,13 +23,14 @@ export default function ManageHotelForm({onSave, isLoading, hotelData}){
         formData.append('description', newHotelData.description);
         formData.append('contactNo', newHotelData.contactNo);
         formData.append('email', newHotelData.email);
-        if([1,2,3,4,5].includes(newHotelData.starRating)) formData.append('starRating', newHotelData.starRating);
+        if([1,2,3,4,5].includes(Number(newHotelData.starRating))){formData.append('starRating', newHotelData.starRating)};
         formData.append('type', newHotelData.type);
 
-        newHotelData.facilities.forEach((facility, index) => {
+        newHotelData.facilities?.forEach((facility, index) => {
             formData.append(`facilities[${index}]`, facility);
         });
-        Array.from(newHotelData.imageFiles).forEach((image) => {
+
+        Array.from(newHotelData.imageFiles)?.forEach((image) => {
             formData.append(`imageFiles`, image);
         })
         
