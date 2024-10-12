@@ -101,13 +101,13 @@ const updateHotel = asyncHandler(async (req, res) => {
         const newImageUrls = await Promise.all(imageUploadPromises);
         
         
-        const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {name, address, city, country, description, type, starRating, contactNo, email, facilities, images: [...imageUrls, ...newImageUrls]}).lean();
+        const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {name, address, city, country, description, type, starRating, contactNo, email, facilities, images: [...(imageUrls || []), ...newImageUrls]}).lean();
 
         if(hotelUpdateResult.modifiedCount === 0){
             throw new ApiError(400, "Error updating hotel!");
         }
 
-        const imagesToDelete = currentHotel.images?.filter((url) => !imageUrls.includes(url)) || [];
+        const imagesToDelete = currentHotel.images?.filter((url) => !imageUrls?.includes(url)) || [];
         
         const imageDeletePromises = imagesToDelete.map((url) => deleteFromCloudinary(url));
         await Promise.all(imageDeletePromises);
