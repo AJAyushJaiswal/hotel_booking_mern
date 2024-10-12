@@ -15,7 +15,7 @@ router.route('/:hotelId').get(verifyAccessToken, getHotel);
 
 router.route('/add').post(
     verifyAccessToken, 
-    upload.array('images', 6),
+    upload.array('imageFiles', 6),
     validateImage,
     [
         body('name')
