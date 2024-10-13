@@ -36,7 +36,7 @@ test('should allow user to log in', async ({page}) => {
   
   await expect(page.getByRole('heading', {name: 'Login to your account'})).toBeVisible();
   
-  await page.locator('[name=email]').fill('testone@email.com');
+  await page.locator('[name=email]').fill('testemail397@email.com');
   await page.locator('[name=password]').fill('Test@1234');
   
   await page.getByRole('button', {name: 'Login'}).click();
@@ -56,7 +56,7 @@ test('should allow user to logout', async ({page}) =>{
   
   await expect(page.getByRole('heading', {name: 'Login to your account'})).toBeVisible();
   
-  await page.locator('[name=email]').fill('testone@email.com');
+  await page.locator('[name=email]').fill('testemail397@email.com');
   await page.locator('[name=password]').fill('Test@1234');
   
   await page.getByRole('button', {name: 'Login'}).click();
