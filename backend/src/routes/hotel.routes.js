@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {verifyAccessToken} from '../middlewares/auth.middleware.js';
-import {getMyHotels, getHotel, createHotel, updateHotel} from '../controllers/hotel.controller.js';
+import {getMyHotels, getHotel, createHotel, updateHotel, deleteHotel} from '../controllers/hotel.controller.js';
 import {body} from 'express-validator';
 import {upload} from '../middlewares/multer.middleware.js';
 import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
@@ -56,7 +56,6 @@ router.route('/:hotelId')
         body('contactNo').notEmpty().withMessage('Contact no. is required!'),
 
         body('email')
-        .isEmail().withMessage('Invalid email format!')
         .optional(),
 
         body('facilities').optional(),
@@ -111,7 +110,6 @@ router.route('/add').post(
         body('contactNo').notEmpty().withMessage('Contact no. is required!'),
 
         body('email')
-        .isEmail().withMessage('Invalid email format!')
         .optional(),
 
         body('facilities').optional()
