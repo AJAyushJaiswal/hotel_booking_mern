@@ -15,7 +15,7 @@ const uploadToCloudinary = async (image) => {
         
         const stream = cloudinary.uploader.upload_stream({
             resource_type: 'image',
-            folder: process.env.NODE_ENV === 'production' ? 'hotelGod' : 'hotelGod/test'
+            folder: `hotelGod/${process.env.NODE_ENV}`
         },
         (error, result) => {
             if(error){
@@ -40,11 +40,11 @@ const deleteFromCloudinary = async (imageUrl) => {
             return rej(new Error('Image URL not provided!'));
         }
 
-        const publicId = `hotelGod/test/${imageUrl.split('/').pop().split('.')[0]}`;
+        const publicId = `hotelGod/${process.env.NODE_ENV}/${imageUrl.split('/').pop().split('.')[0]}`;
         
         cloudinary.uploader.destroy(publicId, {
             resource_type: 'image',
-            folder: process.env.NODE_ENV === 'production' ? 'hotelGod' : 'hotelGod/test'
+            folder: `hotelGod/${process.env.NODE_ENV}`
         }, (error, result) => {
             if(error || result.result != 'ok'){
                 if(process.env.NODE_ENV !== 'production'){
