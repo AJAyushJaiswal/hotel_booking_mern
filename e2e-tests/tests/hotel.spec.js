@@ -57,3 +57,35 @@ test('should display all user hotels', async ({page}) => {
     await expect(page.getByRole('heading', {name: 'My Hotels'})).toBeVisible();
     await expect(page.getByRole('link', {name: 'Add Hotel'})).toBeVisible();
 });
+
+
+test('should allow user to update hotel', async({page}) => {
+    await page.getByRole('link', {name: 'My Hotels'}).click();
+    
+    await expect(page.getByRole('heading', {name: 'My Hotels'})).toBeVisible();
+    await expect(page.getByRole('link', {name: 'Add Hotel'})).toBeVisible();
+    
+    await expect(page.getByRole('heading', {name: 'Test Hotel'}).nth(0)).toBeVisible();
+    
+    await page.locator('div > a', {has: page.locator('svg')}).nth(2).click();
+    
+    await expect(page.getByRole('heading', {name: 'Edit Hotel'})).toBeVisible();
+    
+    await page.locator('[name=name]').fill('Test Hotel 1');
+    await page.locator('[name=address]').fill('testpur 11');
+    await page.selectOption('select[name="city"]', 'Mumbai');
+    await page.selectOption('select[name="starRating"]', 'No Star Rating');
+    await page.locator('[name=email]').fill('');
+    await page.getByText('Budget').click();
+    await page.getByLabel('Sauna').uncheck();
+    
+    await page.locator('div.relative > button', {has: page.locator('svg')}).nth(2).click();
+    await page.locator('div.relative > button', {has: page.locator('svg')}).nth(1).click();
+    
+    await page.getByRole('button', {name: 'Save'}).click();
+    
+    await expect(page.getByRole('button', {name: 'Saving ...'})).toBeVisible();
+    await expect(page.getByRole('button', {name: 'Saving ...'})).toBeDisabled();
+    
+    await expect(page.getByText('Hotel updated successfully!')).toBeVisible({timeout: 15000});
+})
