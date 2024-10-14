@@ -31,6 +31,10 @@ const roomSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
+    roomNumbers: {
+        type: [Integer],
+        required: true
+    },
     images: [{
         type: 'String',
         required: true
