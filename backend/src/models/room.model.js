@@ -32,11 +32,11 @@ const roomSchema = new mongoose.Schema({
         min: 0
     },
     roomNumbers: {
-        type: [Integer],
+        type: [Number],
         required: true
     },
     images: [{
-        type: 'String',
+        type: String,
         required: true
     }],
     capacityPerRoom: {
