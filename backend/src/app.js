@@ -27,9 +27,11 @@ if(process.env.NODE_ENV === 'production'){
 // routes
 import userRouter from './routes/user.routes.js';
 import hotelRouter from './routes/hotel.routes.js';
+import roomRouter from './routes/room.routes.js';
 
 app.use('/api/v1/users/', userRouter);
 app.use('/api/v1/hotels/', hotelRouter);
+app.use('/api/v1/rooms/', hotelRouter);
 
 
 if(process.env.NODE_ENV === 'production'){
