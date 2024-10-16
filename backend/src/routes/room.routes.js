@@ -14,54 +14,61 @@ router.route('/h/:hotelId').post(
     validateImage,
     [
         body('name')
-        .notEmpty().withMessage('Name is required!')
+        .isString().withMessage('Name must be a string!')
+        .trim()
         .isLength({
             min: 5,
             max: 30
-        }),
+        }).withMessage('Name must be in the range of 5-30 characters!'),
 
         body('description')
-        .notEmpty().withMessage('Description is required!')
+        .isString().withMessage('Description must be a string!')
+        .trim()
         .isLength({
             min: 10,
             max: 300
-        }),
+        }).withMessage('Description must be in the range of 5-30 characters!'),
 
         body('type')
-        .notEmpty().withMessage('Room type is required!'),
+        .notEmpty().withMessage('Room type is required!')
+        .isString().withMessage('Room type must be a string!'),
 
-        body('pricePerRoom')
-        .isInt({min: 0}).withMessage('Price can\'t be less than 0!'),
+        body('pricePerNight')
+        .isInt({min: 0}).withMessage('Price per night must be a postive integer!'),
 
         body('totalQuantity')
-        .isInt({min: 1}).withMessage('Total no. of rooms of can\'t be less than 1!'),
+        .isInt({min: 1}).withMessage('Total no. of rooms must be a positive integer greater than 0!'),
 
         body('roomNumbersList')
         .isArray().withMessage('Room Numbers list must be an array!')
         .custom((value, {req}) => {
-            if(value.length !== req.body.totalQuantity){
-                throw new Error('No. of Room Numbers must be same as total no. of rooms!');
+            if(value.length !== Number.parseInt(req.body.totalQuantity)){
+                throw new Error('No. of rooms in room numbers list must match total no. of rooms field!');
             }
             
             return true;
         }),
+        
+        body('roomNumbersList.*')
+        .isInt({min: 0}).withMessage('Room Number must be an positive integer!'),
 
         body('capacityPerRoom')
-        .notEmpty().withMessage('Capacity per room is required!'),
+        .notEmpty().withMessage('Capacity per room is required!')
+        .custom(value => {
+            console.log(value, typeof value);
+            const obj = JSON.parse(value);
+            console.log(obj, typeof obj);
+            if(typeof obj !== 'object'){
+                throw new Error('Capacity per room should be an object!');
+            }
+        }),
         
-        body('capacityPerRoom.adults')
-        .isInt({min: 1}).withMessage('Room should have capacity for at least one adult!'),
-
-        body('capacityPerRoom.children')
-        .optional()
-        .isInt({min: 0}).withMessage('Children capacity per room can\'t be negative!'),
-
         body('facilities')
         .optional()
         .isArray().withMessage('Facilities must be an array!'),
 
         body('facilties.*')
-        .isString().withMessage('Every facility must be a string!')
+        .isString().withMessage('Facility must be a string!')
     ],
     addRoom
 );

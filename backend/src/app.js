@@ -31,7 +31,7 @@ import roomRouter from './routes/room.routes.js';
 
 app.use('/api/v1/users/', userRouter);
 app.use('/api/v1/hotels/', hotelRouter);
-app.use('/api/v1/rooms/', hotelRouter);
+app.use('/api/v1/rooms/', roomRouter);
 
 
 if(process.env.NODE_ENV === 'production'){

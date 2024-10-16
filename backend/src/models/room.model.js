@@ -48,7 +48,7 @@ const roomSchema = new mongoose.Schema({
         children: {
             type: Number,
             required: true,
-            default: 0
+            min: 0
         }
     },
     facilities: [{
