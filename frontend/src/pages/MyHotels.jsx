@@ -111,6 +111,10 @@ export default function MyHotels(){
                                     {hotel.totalRooms || 0} total rooms
                                 </span> 
                             </div>
+                            <div className="flex mt-4">
+                                <Link to={`./${hotel._id}/rooms/add`} className="border rounded-lg bg-violet-600 text-white px-2.5 py-1 mr-6 text-sm hover:bg-violet-700 hover:shadow-lg">Add Room</Link>                                
+                                <Link to={`./${hotel._id}/rooms/`} className="border rounded-lg bg-violet-600 text-white px-2.5 py-1 mr-6 text-sm hover:bg-violet-700 hover:shadow-lg">All Rooms</Link>                                
+                            </div>
                         </div> 
                     ))}
                 </div>
