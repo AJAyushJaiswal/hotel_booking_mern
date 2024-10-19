@@ -26,7 +26,7 @@ const roomSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
-    quantityAvailable: {
+    availableQuantity: {
         type: Number,
         required: true,
         min: 0

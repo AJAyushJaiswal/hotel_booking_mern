@@ -51,7 +51,7 @@ const addRoom = asyncHandler(async (req, res) => {
         throw new ApiError("Error adding room!");
     }
     
-    const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {$inc: {totalRooms: totalQuantity, availableRooms: totalQuantity}});
+    const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {$inc: {totalRooms: totalQuantity, availableQuantity: totalQuantity}});
     if(hotelUpdateResult.modifiedCount === 0){
         throw new ApiError("Error adding room!");
     }
