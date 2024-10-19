@@ -39,35 +39,30 @@ router.route('/h/:hotelId').post(
         body('totalQuantity')
         .isInt({min: 1}).withMessage('Total no. of rooms must be a positive integer greater than 0!'),
 
-        body('roomNumbersList')
+        body('roomNumbers')
         .isArray().withMessage('Room Numbers list must be an array!')
         .custom((value, {req}) => {
             if(value.length !== Number.parseInt(req.body.totalQuantity)){
-                throw new Error('No. of rooms in room numbers list must match total no. of rooms field!');
+                throw new Error('Room numbers array must match value in total no. of rooms field!');
             }
             
             return true;
         }),
         
-        body('roomNumbersList.*')
-        .isInt({min: 0}).withMessage('Room Number must be an positive integer!'),
-
-        body('capacityPerRoom')
-        .notEmpty().withMessage('Capacity per room is required!')
-        .custom(value => {
-            console.log(value, typeof value);
-            const obj = JSON.parse(value);
-            console.log(obj, typeof obj);
-            if(typeof obj !== 'object'){
-                throw new Error('Capacity per room should be an object!');
-            }
-        }),
+        body('roomNumbers.*')
+        .isInt({min: 0}).withMessage('Every Room Number must be an positive integer!'),
         
+        body('adults')
+        .isInt({min: 1}).withMessage('Adult capacity must be a positive integer greater than 0'),
+
+        body('children')
+        .isInt({min: 0}).withMessage('Child capacity must be a positive integer greater including 0'),
+
         body('facilities')
         .optional()
         .isArray().withMessage('Facilities must be an array!'),
 
-        body('facilties.*')
+        body('facilities.*')
         .isString().withMessage('Facility must be a string!')
     ],
     addRoom

@@ -4,11 +4,9 @@ import {allowedImageTypes} from '../../constants/hotelForm.constants.js';
 
 
 export default function ManageRoomForm({onSave, isLoading}){
-    const {register, formState: {errors}, handleSubmit} = useForm();
+    const {register, formState: {errors}, handleSubmit, watch} = useForm();
     
     const submitForm = handleSubmit((roomFormData) => {
-        console.log(roomFormData);
-
         const formData = new FormData();
         formData.append('name', roomFormData.name);
         formData.append('type', roomFormData.type);
@@ -19,10 +17,9 @@ export default function ManageRoomForm({onSave, isLoading}){
         formData.append('description', roomFormData.description);
         
         roomFormData.roomNumbers.split(',')?.forEach((roomNo, index) => {
-            formData.append(`roomNumbers[${index}]`, Number.parseInt(roomNo));
+            formData.append(`roomNumbers[${index}]`, Number.parseInt(roomNo.trim()));
         });
 
-        
         Array.from(roomFormData.facilities)?.forEach((facility, index) => {
             formData.append(`facilities[${index}]`, facility);
         });
@@ -141,6 +138,13 @@ export default function ManageRoomForm({onSave, isLoading}){
                             pattern: {
                                 value: /^(\s*[1-9][0-9]*(\s*,\s*[1-9][0-9]*)*\s*)*$/, 
                                 message: 'This field can only contain [0-9][ ][,]'
+                            },
+                            validate: (values) => {
+                                const roomNumbers = values.split(',').map(room => Number.parseInt(room.trim()));
+
+                                if(roomNumbers.length !== Number.parseInt(watch('totalQuantity'))){
+                                    return 'Room numbers must match total rooms field';
+                                }
                             }
                         })}/>
                         {errors.roomNumbers &&(
@@ -201,7 +205,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                 </div>
         
                 <div className="text-center">
-                    <button type="submit" className="bg-violet-500 text-white py-0.5 px-4 rounded-full border-0 align-center hover:bg-violet-600 active:bg-violet-700">Save</button>
+                    <button type="submit" className="bg-violet-500 text-white py-0.5 px-4 rounded-full border-0 align-center hover:bg-violet-600 active:bg-violet-700">{!isLoading ? 'Save' : 'Saving...'}</button>
                 </div>
             </form>
         </div>
