@@ -205,7 +205,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                 </div>
         
                 <div className="text-center">
-                    <button type="submit" className="bg-violet-500 text-white py-0.5 px-4 rounded-full border-0 align-center hover:bg-violet-600 active:bg-violet-700">{!isLoading ? 'Save' : 'Saving...'}</button>
+                    <button type="submit" className="bg-violet-500 text-white py-0.5 px-4 rounded-full border-0 align-center hover:bg-violet-600 active:bg-violet-700 disabled:bg-violet-500" disabled={isLoading}>{!isLoading ? 'Save' : 'Saving...'}</button>
                 </div>
             </form>
         </div>
