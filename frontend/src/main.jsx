@@ -14,6 +14,7 @@ import AddHotel from './pages/AddHotel.jsx';
 import MyHotels from './pages/MyHotels.jsx';
 import EditHotel from './pages/EditHotel.jsx';
 import AddRoom from './pages/AddRoom.jsx';
+import HotelRooms from './pages/HotelRooms.jsx';
 
 
 const router = createBrowserRouter([
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: ':hotelId/rooms/',
         children: [
+          {
+            index: true,
+            element: <HotelRooms/>
+          },
           {
             path: 'add',
             element: <AddRoom/>
