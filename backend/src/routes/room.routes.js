@@ -32,12 +32,19 @@ router.route('/h/:hotelId')
             max: 300
         }).withMessage('Description must be in the range of 5-30 characters!'),
 
-        body('type')
-        .notEmpty().withMessage('Room type is required!')
-        .isString().withMessage('Room type must be a string!'),
+        body('bedType')
+        .notEmpty().withMessage('Bed type is required!')
+        .isString().withMessage('Bed type must be a string!'),
 
         body('pricePerNight')
-        .isInt({min: 0}).withMessage('Price per night must be a postive integer!'),
+        .isInt({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
+        
+        body('view')
+        .notEmpty().withMessage('View is required!')
+        .isString().withMessage('View must be a string!'),
+        
+        body('roomSize')
+        .isInt({min: 1}).withMessage('Room size must at least be 1 square meter!'),
 
         body('totalQuantity')
         .isInt({min: 1}).withMessage('Total no. of rooms must be a positive integer greater than 0!'),

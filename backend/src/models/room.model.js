@@ -12,28 +12,25 @@ const roomSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    type: {
+    bedType: {
         type: 'String',
-        required: true
+        required: true,
+        trim: true
     },
     pricePerNight: {
         type: Number,
         required: true,
         min: 0
     },
-    totalQuantity: {
+    view: {
+        type: 'String',
+        required: true,
+        trim: true
+    },
+    roomSize: {         // square meters
         type: Number,
         required: true,
         min: 1
-    },
-    availableQuantity: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    roomNumbers: {
-        type: [Number],
-        required: true
     },
     images: [{
         type: String,
@@ -58,6 +55,20 @@ const roomSchema = new mongoose.Schema({
     hotel: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hotel',
+        required: true
+    },
+    totalQuantity: {
+        type: Number,
+        required: true,
+        min: 1
+    },
+    availableQuantity: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    roomNumbers: {
+        type: [Number],
         required: true
     },
 }, {timestamps: true});
