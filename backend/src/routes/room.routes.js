@@ -3,13 +3,16 @@ import {verifyAccessToken} from '../middlewares/auth.middleware.js';
 import {upload} from '../middlewares/multer.middleware.js';
 import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
 import {body} from 'express-validator';
-import {addRoom} from '../controllers/room.controller.js';
+import {addRoom, getAllHotelRooms} from '../controllers/room.controller.js';
 
 
 const router = Router();
 
-router.route('/h/:hotelId').post(
-    verifyAccessToken, 
+router.use(verifyAccessToken);
+
+router.route('/h/:hotelId')
+.get(getAllHotelRooms)
+.post(
     upload.array('imageFiles', 6),
     validateImage,
     [

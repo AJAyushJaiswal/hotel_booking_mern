@@ -60,6 +60,25 @@ const addRoom = asyncHandler(async (req, res) => {
 });
 
 
+const getAllHotelRooms = asyncHandler(async (req, res) => {
+    const {hotelId} = req.params;
+    
+    if(!hotelId || !isValidObjectId(hotelId)){
+        throw new ApiError(400, 'Invalid hotel id!');
+    }
+    
+    const hotelExists = await Hotel.exists({_id: hotelId, owner: req.user._id});
+    if(!hotelExists){
+        throw new ApiError(400, 'Invalid hotel id!');
+    }
+    
+    const rooms = await Room.find({hotel: hotelId}).select('-__v -description -images -roomNumbers -facilities -hotel -createdAt -updatedAt').lean();
+    
+    res.status(200).json(new ApiResponse(200, rooms, "Hotel rooms fetched successfully!"));
+});
+
+
 export {
-    addRoom
+    addRoom,
+    getAllHotelRooms
 }
