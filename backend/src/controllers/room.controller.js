@@ -25,7 +25,7 @@ const addRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel id!");
     }
     
-    const {name, description, bedType, pricePerNight, view, roomSize, totalQuantity, roomNumbers, adults, children, facilities} = req.body;
+    const {name, description, bedType, bedCount, pricePerNight, view, roomSize, totalQuantity, roomNumbers, adults, children, facilities} = req.body;
     
     const images = req.files;
     if(!images || images.length < 3 || images.length > 6){
@@ -46,7 +46,7 @@ const addRoom = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error uploading images!");
     }
 
-    const room = await Room.create({name, description, bedType, pricePerNight, view, roomSize, totalQuantity, availableQuantity: totalQuantity, roomNumbers, capacityPerRoom: {adults, children}, facilities, images: imageUrls, hotel: hotelId});
+    const room = await Room.create({name, description, bedType, bedCount, pricePerNight, view, roomSize, totalQuantity, availableQuantity: totalQuantity, roomNumbers, capacityPerRoom: {adults, children}, facilities, images: imageUrls, hotel: hotelId});
     if(!room){
         throw new ApiError("Error adding room!");
     }

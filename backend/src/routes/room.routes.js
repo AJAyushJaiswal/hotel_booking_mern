@@ -36,6 +36,9 @@ router.route('/h/:hotelId')
         .notEmpty().withMessage('Bed type is required!')
         .isString().withMessage('Bed type must be a string!'),
 
+        body('bedCount')
+        .isInt({min: 1}).withMessage('Bed count must be a positive integer!'),
+
         body('pricePerNight')
         .isInt({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
         

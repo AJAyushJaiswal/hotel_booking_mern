@@ -17,6 +17,11 @@ const roomSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    bedCount: {
+        type: Number,
+        required: true,
+        min: 1
+    },
     pricePerNight: {
         type: Number,
         required: true,
