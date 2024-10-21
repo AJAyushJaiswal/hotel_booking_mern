@@ -9,7 +9,10 @@ export default function ManageRoomForm({onSave, isLoading}){
     const submitForm = handleSubmit((roomFormData) => {
         const formData = new FormData();
         formData.append('name', roomFormData.name);
-        formData.append('type', roomFormData.type);
+        formData.append('bedType', roomFormData.bedType);
+        formData.append('view', roomFormData.view);
+        formData.append('roomSize', roomFormData.roomSize);
+        formData.append('bedCount', roomFormData.bedCount);
         formData.append('pricePerNight', roomFormData.pricePerNight);
         formData.append('adults', roomFormData.adults);
         formData.append('children', roomFormData.children);
@@ -39,7 +42,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                 <div className="flex mb-4">
                     <label className="w-4/6 relative">
                         <span className="font-medium text-gray-600">Name</span>
-                        <input type="text" className="border border-gray-300 rounded-md w-full px-2 py-1 text-sm text-gray-600 focus:outline-violet-400" {...register('name', {
+                        <input type="text" className="border border-gray-300 rounded-md w-full px-2 py-1 text-sm text-gray-600 focus:outline-violet-400" placeholder="eg: Presidential Suite" {...register('name', {
                             required: 'This field is required',
                             minLength: {
                                 value: 5,
@@ -55,12 +58,57 @@ export default function ManageRoomForm({onSave, isLoading}){
                         )}
                     </label>
                     <label className="w-2/6 ml-3 relative">
-                        <span className="font-medium text-gray-600">Type</span>
-                        <input type="text" className="border border-gray-300 rounded-md px-2 py-1 w-full text-sm text-gray-600 focus:outline-violet-400" {...register('type', {
+                        <span className="font-medium text-gray-600">Bed Type</span>
+                        <input type="text" className="border border-gray-300 rounded-md px-2 py-1 w-full text-sm text-gray-600 focus:outline-violet-400" placeholder="eg: King" {...register('bedType', {
                             required: 'This field is required'
                         })}/>
                         {errors.type &&(
                             <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.75rem'}}>{errors.type.message}</span>
+                        )}
+                    </label>
+                </div>               
+                <div className="flex mb-4">
+                    <label className="w-2/6 mr-3 relative">
+                        <span className="font-medium text-gray-600">View</span>
+                        <input type="text" className="border border-gray-300 rounded-md w-full px-2 py-1 text-sm text-gray-600 focus:outline-violet-400" placeholder="eg: sea view" {...register('view', {
+                            required: 'This field is required',
+                            minLength: {
+                                value: 8,
+                                message: 'View must be at least 8 characters'
+                            },
+                            maxLength: {
+                                value: 20,
+                                message: 'View must be at least 20 characters'
+                            },
+                        })}/>
+                        {errors.view &&(
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.67rem'}}>{errors.view.message}</span>
+                        )}
+                    </label>
+                    <label className="w-2/6 mr-3 relative">
+                        <span className="font-medium text-gray-600">Room Size</span>
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" min={1} placeholder="square meters" {...register('roomSize', {
+                            required: 'This field is required',
+                            min: {
+                                value: 1,
+                                message: 'Room size can\'t be less than 1'
+                            }
+                        })}/>
+                        {errors.roomSize &&(
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.75rem'}}>{errors.roomSize.message}</span>
+                        )}
+                    </label>
+                    <label className="w-2/6 relative">
+                        <span className="font-medium text-gray-600">Bed Count</span>
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" min={1} placeholder="min: 1" {...register('bedCount', {
+                            required: 'This field is required',
+                            min: {
+                                value: 1,
+                                message: 'Bed count can\'t be less than 1'
+                            }
+                        })}/>
+                        {errors.bedCount &&(
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.75rem'}}>{errors.bedCount.message}</span>
                         )}
                     </label>
                 </div>               
@@ -116,7 +164,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                 <div className="flex mb-4">
                     <label className="w-2/6 relative">
                         <span className="font-medium text-gray-600">Total Rooms</span>
-                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-1 text-sm text-gray-600 w-full focus:outline-violet-400" placeholder="eg:3" min={1} {...register('totalQuantity', {
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-1 text-sm text-gray-600 w-full focus:outline-violet-400" placeholder="eg: 3" min={1} {...register('totalQuantity', {
                             required: 'This field is required',
                             min: {
                                 value: 1,
