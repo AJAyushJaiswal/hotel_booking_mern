@@ -43,8 +43,12 @@ router.route('/h/:hotelId')
         .isInt({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
         
         body('view')
-        .notEmpty().withMessage('View is required!')
-        .isString().withMessage('View must be a string!'),
+        .isString().withMessage('View must be a string!')
+        .trim()
+        .isLength({
+            min: 8,
+            max: 20
+        }).withMessage('View must be in the range of 8-20 characters!'),
         
         body('roomSize')
         .isInt({min: 1}).withMessage('Room size must at least be 1 square meter!'),
