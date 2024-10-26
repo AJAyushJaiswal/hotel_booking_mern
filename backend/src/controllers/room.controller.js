@@ -78,6 +78,23 @@ const getAllHotelRooms = asyncHandler(async (req, res) => {
 });
 
 
+const getHotelRoom = asyncHandler(async (req, res) => {
+    const hotelId = req.params?.hotelId;
+    const roomId = req.params?.roomId;
+    
+    if(!hotelId || !roomId || !isValidObjectId(hotelId) || !isValidObjectId(roomId)){
+        throw new ApiError(400, "Invalid hotel or room id!");
+    }
+    
+    const room = await Room.findOne({_id: roomId, hotel: hotelId}).select('-__v -createdAt -updatedAt -hotel -availableQuantity').lean();
+    if(!room){
+        throw new ApiError(400, "Invalid hotel or room id!");
+    }
+    
+    res.status(200).send(new ApiResponse(200, room, "Hotel Room fetched successfully!"));
+});
+
+
 const updateRoom = asyncHandler(async (req, res) => {
     const hotelId = req.params?.hotelId;
     const roomId = req.params?.roomId;
@@ -137,5 +154,6 @@ const updateRoom = asyncHandler(async (req, res) => {
 export {
     addRoom,
     getAllHotelRooms,
+    getHotelRoom,
     updateRoom
 }

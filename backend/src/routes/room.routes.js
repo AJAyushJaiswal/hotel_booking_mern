@@ -3,7 +3,7 @@ import {verifyAccessToken} from '../middlewares/auth.middleware.js';
 import {upload} from '../middlewares/multer.middleware.js';
 import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
 import {body} from 'express-validator';
-import {addRoom, getAllHotelRooms, updateRoom} from '../controllers/room.controller.js';
+import {addRoom, getAllHotelRooms, getHotelRoom, updateRoom} from '../controllers/room.controller.js';
 
 
 const router = Router();
@@ -87,6 +87,7 @@ router.route('/h/:hotelId')
 
 
 router.route('/h/:hotelId/r/:roomId')
+.get(getHotelRoom)
 .put(
     upload.array('imageFiles', 6),
     validateImage,
