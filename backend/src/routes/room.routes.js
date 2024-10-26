@@ -3,7 +3,7 @@ import {verifyAccessToken} from '../middlewares/auth.middleware.js';
 import {upload} from '../middlewares/multer.middleware.js';
 import {validateImage} from '../middlewares/fileImageValidation.middleware.js';
 import {body} from 'express-validator';
-import {addRoom, getAllHotelRooms, getHotelRoom, updateRoom} from '../controllers/room.controller.js';
+import {addRoom, deleteRoom, getAllHotelRooms, getHotelRoom, updateRoom} from '../controllers/room.controller.js';
 
 
 const router = Router();
@@ -167,6 +167,7 @@ router.route('/h/:hotelId/r/:roomId')
     ],
     updateRoom
 )
+.delete(deleteRoom);
 
 
 export default router;

@@ -146,9 +146,38 @@ const updateRoom = asyncHandler(async (req, res) => {
 });
 
 
+const deleteRoom = asyncHandler(async (req, res) => {
+    const hotelId = req.params?.hotelId; 
+    const roomId = req.params?.roomId; 
+    
+    if(!hotelId || !roomId || !isValidObjectId(hotelId) || !isValidObjectId(roomId)){
+        throw new ApiError(400, "Invalid hotel or room id!");
+    }
+    
+    const deletedRoom = await Room.findOneAndDelete({_id: roomId, hotel: hotelId}, {new: true}).select('images').lean();
+    
+    if(!deletedRoom){
+        throw new ApiError(400, "Error removing the hotel room!");
+    }
+   
+    try{
+        const imageDeletePromises = images.map(url => deleteFromCloudinary(url));
+        await imageDeletePromises;
+    }
+    catch(error){
+        if(process.env.NODE_ENV !== 'production') console.log(error);
+
+        throw new ApiError(500, "Error removing the hotel room!");
+    }
+    
+    res.send(200).json(new ApiResponse(200, null, "Hotel room removed successfully!"));
+});
+
+
 export {
     addRoom,
     getAllHotelRooms,
     getHotelRoom,
-    updateRoom
+    updateRoom,
+    deleteRoom
 }
