@@ -155,7 +155,14 @@ router.route('/h/:hotelId/r/:roomId')
         .isArray().withMessage('Facilities must be an array!'),
 
         body('facilities.*')
-        .isString().withMessage('Facility must be a string!')
+        .isString().withMessage('Facility must be a string!'),
+
+        body('imagesUrls')
+        .optional()
+        .isArray().withMessage('Image urls must be an array'),
+        
+        body('imageUrls.*')
+        .isString().withMessage('Every image url must be a string!')
     ],
     updateRoom
 )

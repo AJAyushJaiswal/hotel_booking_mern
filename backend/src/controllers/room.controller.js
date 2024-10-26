@@ -82,44 +82,54 @@ const updateRoom = asyncHandler(async (req, res) => {
     const hotelId = req.params?.hotelId;
     const roomId = req.params?.roomId;
     
-    if(!hotelId || !roomId || !isValidObjectId(hotelId) || isValidObjectId(roomId)){
+    if(!hotelId || !roomId || !isValidObjectId(hotelId) || !isValidObjectId(roomId)){
+        throw new ApiError(400, "Invalid hotel or room id!");
+    }
+
+    // const oldImageUrls = await Room.findOne({_id:roomId, hotel:hotelId}, {images: 1, _id:0}).lean();
+    const currentRoom = await Room.findOne({_id:roomId, hotel:hotelId}, {images: 1, _id: 0}).lean();
+    if(!currentRoom){
         throw new ApiError(400, "Invalid hotel or room id!");
     }
 
     const validationRes = validationResult(req);
-    if(!validationRes || validationRes.isEmpty()){
+    if(!validationRes || !validationRes.isEmpty()){
         throw new ApiError(400, "Invalid room data!", validationRes.errors);
     }
 
-    const oldImageUrls = await Room.findOne({id:roomId, hotel:hotelId}, {images:1}).lean();
-    if(!oldImageUrls){
-        throw new ApiError(400, "Invalid hotel or room id!");
-    }
-
     const {name, description, bedType, bedCount, pricePerNight, view, roomSize, adults, children, facilities, totalQuantity, roomNumbers, imageUrls} = req.body;
+    const imageFiles = req.files; 
     
-    const images = req.files; 
-    if(!images || (images.length + (imageUrls?.length || 0)) < 3 || (images.length + (imageUrls?.length || 0)) > 6){
-        throw new ApiError('Images must be in the range of 3-6!');
+    const totalImages = (imageFiles?.length || 0) + (imageUrls?.length || 0);    
+    if(!imageFiles || totalImages < 3 || totalImages > 6){
+        throw new ApiError(400, "Images must be in the range of 3-6!");
     } 
     
+    const isImageUrlsValid = imageUrls.every(url => currentRoom.images.includes(url));
+    if(!isImageUrlsValid){
+        throw new ApiError(400, "Invalid image urls!");
+    }
 
     try{
-        const imageUploadPromises = images.map(image => uploadToCloudinary(image));    
+        const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));    
         const newImageUrls = await Promise.all(imageUploadPromises);
 
-        const updatedRoom = await Room.updateOne({id: roomId, hotel:hotelId}, {name, description, bedType, bedCount, pricePerNight, view, roomSize, capacityPerRoom: {adults, children}, facilities: facilities || [], totalQuantity, roomNumbers, images: [...(imageUrls || []), ...newImageUrls]}).lean();
+        const updatedRoom = await Room.updateOne({_id: roomId, hotel:hotelId}, {name, description, bedType, bedCount, pricePerNight, view, roomSize,
+             capacityPerRoom: {adults, children}, 
+             facilities: facilities || [], 
+             totalQuantity, availableQuantity: totalQuantity, roomNumbers, 
+             images: [...(imageUrls || []), ...(newImageUrls || [])]}).lean();
         if(updatedRoom.modifiedCount !== 1){
             throw new ApiError(400, "Error updating hotel room!");
         }
         
-        const imagesToDelete = await oldImageUrls.map(url => !imageUrls?.includes(url));
-        const imageDeletePromises = imagesToDelete.map(url => deleteFromCloudinary(url));
+        const imagesToDelete = currentRoom.images?.filter(url => !imageUrls.includes(url)) || [];
+        const imageDeletePromises = imagesToDelete?.map(url => deleteFromCloudinary(url));
         await Promise.all(imageDeletePromises);
         
         res.status(200).json(new ApiResponse(200, "Room updated successfully!"));
     }catch(e){
-
+        console.log(e);
     }
 });
 
