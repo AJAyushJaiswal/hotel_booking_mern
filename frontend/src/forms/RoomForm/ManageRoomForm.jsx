@@ -123,7 +123,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                             }
                         })}/>
                         {errors.pricePerNight &&(
-                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.75rem'}}>{errors.pricePerNight.message}</span>
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.68rem'}}>{errors.pricePerNight.message}</span>
                         )}
                     </label>
                     <label className="w-2/6 mr-3 relative">
@@ -136,11 +136,11 @@ export default function ManageRoomForm({onSave, isLoading}){
                             },
                             pattern: {
                                 value: /^[1-9][0-9]*/, 
-                                message: 'Adult capacity must be whole no.'
+                                message: 'Adult capacity must be a +ve integer'
                             }
                         })}/>
                         {errors.adults &&(
-                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.75rem'}}>{errors.adults.message}</span>
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.68rem'}}>{errors.adults.message}</span>
                         )}
                     </label>
                     <label className="w-2/6 relative">
@@ -153,11 +153,11 @@ export default function ManageRoomForm({onSave, isLoading}){
                             },
                             pattern: {
                                 value: /^[1-9][0-9]*/, 
-                                message: 'Child capacity must be whole no.'
+                                message: 'Child capacity must be a +ve integer'
                             }
                         })}/>
                         {errors.children &&(
-                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize:'0.75rem'}}>{errors.children.message}</span>
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize:'0.68rem'}}>{errors.children.message}</span>
                         )}
                     </label>
                 </div>
@@ -172,11 +172,11 @@ export default function ManageRoomForm({onSave, isLoading}){
                             },
                             pattern: {
                                 value: /^[1-9][0-9]*/, 
-                                message: 'Total rooms must be whole no.'
+                                message: 'Total rooms must be a +ve integer'
                             }
                         })}/>
                         {errors.totalQuantity &&(
-                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.75rem'}}>{errors.totalQuantity.message}</span>
+                            <span className="text-red-500 absolute -bottom-4 left-0" style={{fontSize: '0.68rem'}}>{errors.totalQuantity.message}</span>
                         )}
                     </label>
                     <label className="w-4/6 ml-3 relative">
