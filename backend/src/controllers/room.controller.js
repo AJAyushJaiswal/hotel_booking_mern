@@ -154,15 +154,15 @@ const deleteRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel or room id!");
     }
     
-    const deletedRoom = await Room.findOneAndDelete({_id: roomId, hotel: hotelId}, {new: true}).select('images').lean();
+    const deletedRoom = await Room.findOneAndDelete({_id: roomId, hotel: hotelId}, {new: true}).select('images -_id').lean();
     
     if(!deletedRoom){
         throw new ApiError(400, "Error removing the hotel room!");
     }
    
     try{
-        const imageDeletePromises = images.map(url => deleteFromCloudinary(url));
-        await imageDeletePromises;
+        const imageDeletePromises = deletedRoom.images?.map(url => deleteFromCloudinary(url)) || [];
+        await Promise.all(imageDeletePromises);
     }
     catch(error){
         if(process.env.NODE_ENV !== 'production') console.log(error);
@@ -170,7 +170,7 @@ const deleteRoom = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Error removing the hotel room!");
     }
     
-    res.send(200).json(new ApiResponse(200, null, "Hotel room removed successfully!"));
+    res.status(200).json(new ApiResponse(200, null, "Hotel room removed successfully!"));
 });
 
 
