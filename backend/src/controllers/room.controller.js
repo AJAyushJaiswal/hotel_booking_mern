@@ -103,7 +103,6 @@ const updateRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel or room id!");
     }
 
-    // const oldImageUrls = await Room.findOne({_id:roomId, hotel:hotelId}, {images: 1, _id:0}).lean();
     const currentRoom = await Room.findOne({_id:roomId, hotel:hotelId}, {images: 1, _id: 0}).lean();
     if(!currentRoom){
         throw new ApiError(400, "Invalid hotel or room id!");
@@ -127,27 +126,23 @@ const updateRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid image urls!");
     }
 
-    try{
-        const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));    
-        const newImageUrls = await Promise.all(imageUploadPromises);
+    const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));    
+    const newImageUrls = await Promise.all(imageUploadPromises);
 
-        const updatedRoom = await Room.updateOne({_id: roomId, hotel:hotelId}, {name, description, bedType, bedCount, pricePerNight, view, roomSize,
-             capacityPerRoom: {adults, children}, 
-             facilities: facilities || [], 
-             totalQuantity, availableQuantity: totalQuantity, roomNumbers, 
-             images: [...(imageUrls || []), ...(newImageUrls || [])]}).lean();
-        if(updatedRoom.modifiedCount !== 1){
-            throw new ApiError(400, "Error updating hotel room!");
-        }
-        
-        const imagesToDelete = currentRoom.images?.filter(url => !imageUrls.includes(url)) || [];
-        const imageDeletePromises = imagesToDelete?.map(url => deleteFromCloudinary(url));
-        await Promise.all(imageDeletePromises);
-        
-        res.status(200).json(new ApiResponse(200, "Room updated successfully!"));
-    }catch(e){
-        console.log(e);
+    const updatedRoom = await Room.updateOne({_id: roomId, hotel:hotelId}, {name, description, bedType, bedCount, pricePerNight, view, roomSize,
+         capacityPerRoom: {adults, children}, 
+         facilities: facilities || [], 
+         totalQuantity, availableQuantity: totalQuantity, roomNumbers, 
+         images: [...(imageUrls || []), ...(newImageUrls || [])]}).lean();
+    if(updatedRoom.modifiedCount !== 1){
+        throw new ApiError(400, "Error updating hotel room!");
     }
+    
+    const imagesToDelete = currentRoom.images?.filter(url => !imageUrls.includes(url)) || [];
+    const imageDeletePromises = imagesToDelete?.map(url => deleteFromCloudinary(url));
+    await Promise.all(imageDeletePromises);
+    
+    res.status(200).json(new ApiResponse(200, null, "Room updated successfully!"));
 });
 
 
