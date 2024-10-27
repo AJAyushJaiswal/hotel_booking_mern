@@ -34,8 +34,24 @@ const getAllHotelRooms = async (hotelId) => {
     return result.data;
 }
 
+const getRoom = async ({hotelId, roomId}) => {
+    const response = fetch(`${API_BASE_URL}/api/v1/rooms/h${hotelId}/r/${roomId}`, {
+        method: 'GET',
+        credentials: 'include'
+    });
+    
+    const result = await response.json();
+    
+    if(!result.success){
+        throw new ApiError(error.message);
+    }
+    
+    return result;
+}
+
 
 export {
     addRoom,
-    getAllHotelRooms
+    getAllHotelRooms,
+    getRoom
 }
