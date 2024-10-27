@@ -1,10 +1,20 @@
 import {useForm} from 'react-hook-form';
 import {roomFacilitiesList} from '../../constants/roomForm.constants.js';
 import {allowedImageTypes} from '../../constants/hotelForm.constants.js';
+import {useEffect} from 'react';
 
 
-export default function ManageRoomForm({onSave, isLoading}){
-    const {register, formState: {errors}, handleSubmit, watch} = useForm();
+export default function ManageRoomForm({onSave, isLoading, prevRoomData}){
+    const {register, formState: {errors}, handleSubmit, watch, reset, setValue} = useForm();
+    
+    useEffect(() => {
+        reset({
+            ...prevRoomData, 
+            roomNumbers: prevRoomData?.roomNumbers?.join(', '),
+            adults: prevRoomData?.capacityPerRoom?.adults,
+            children: prevRoomData?.capacityPerRoom?.children
+        }); 
+    }, [prevRoomData, reset]);
     
     const submitForm = handleSubmit((roomFormData) => {
         const formData = new FormData();
@@ -31,12 +41,22 @@ export default function ManageRoomForm({onSave, isLoading}){
             formData.append(`imageFiles`, image);
         });
         
+        roomFormData.images?.forEach((url, index) => {
+           formData.append(`imageUrls[${index}]`, url); 
+        })
+        
         onSave(formData);
     });
+    
+    const imageUrls = watch('images');
+    
+    const removeImageUrl = (imageUrl) => {
+        setValue('images', imageUrls?.filter(image => image !== imageUrl));
+    }
 
     return (
         <div className="border rounded-lg py-8 px-12 w-96 m-auto my-14" style={{width:'700px', boxShadow: '0 0 15px 4px rgb(0, 0, 0, 0.1)'}}>
-            <h1 className="text-xl font-semibold text-center text-gray-600">Add Room</h1>
+            <h1 className="text-xl font-semibold text-center text-gray-600">{!prevRoomData ? 'Add' : 'Edit'} Room</h1>
         
             <form className="mt-4" onSubmit={submitForm}>
                 <div className="flex mb-4">
@@ -73,8 +93,8 @@ export default function ManageRoomForm({onSave, isLoading}){
                         <input type="text" className="border border-gray-300 rounded-md w-full px-2 py-1 text-sm text-gray-600 focus:outline-violet-400" placeholder="eg: sea view" {...register('view', {
                             required: 'This field is required',
                             minLength: {
-                                value: 8,
-                                message: 'View must be at least 8 characters'
+                                value: 7,
+                                message: 'View must be at least 7 characters'
                             },
                             maxLength: {
                                 value: 20,
@@ -87,7 +107,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                     </label>
                     <label className="w-2/6 mr-3 relative">
                         <span className="font-medium text-gray-600">Room Size</span>
-                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" min={1} placeholder="square meters" {...register('roomSize', {
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" step=".01" min={1} placeholder="square meters" {...register('roomSize', {
                             required: 'This field is required',
                             min: {
                                 value: 1,
@@ -100,11 +120,15 @@ export default function ManageRoomForm({onSave, isLoading}){
                     </label>
                     <label className="w-2/6 relative">
                         <span className="font-medium text-gray-600">Bed Count</span>
-                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" min={1} placeholder="min: 1" {...register('bedCount', {
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" placeholder="min: 1" {...register('bedCount', {
                             required: 'This field is required',
                             min: {
                                 value: 1,
                                 message: 'Bed count can\'t be less than 1'
+                            },
+                            pattern: {
+                                value: /^[0-9]+$/,
+                                message: 'Bed count must be +ve integer'
                             }
                         })}/>
                         {errors.bedCount &&(
@@ -115,7 +139,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                 <div className="flex mb-4">
                     <label className="w-2/6 mr-3 relative">
                         <span className="font-medium text-gray-600">Price per night</span>
-                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" min={0} placeholder="Rupees" {...register('pricePerNight', {
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" step="0.1" placeholder="Rupees" {...register('pricePerNight', {
                             required: 'This field is required',
                             min: {
                                 value: 0,
@@ -135,8 +159,8 @@ export default function ManageRoomForm({onSave, isLoading}){
                                 message: 'Adult capacity can\'t be less than 1'
                             },
                             pattern: {
-                                value: /^[1-9][0-9]*/, 
-                                message: 'Adult capacity must be a +ve integer'
+                                value: /^[0-9]+$/, 
+                                message: 'Adult capacity must be a integer'
                             }
                         })}/>
                         {errors.adults &&(
@@ -145,15 +169,15 @@ export default function ManageRoomForm({onSave, isLoading}){
                     </label>
                     <label className="w-2/6 relative">
                         <span className="font-medium text-gray-600">Children</span>
-                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" min={0} placeholder='min: 0' {...register('children', {
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-2 text-sm text-gray-600 w-full focus:outline-violet-400" placeholder='min: 0' {...register('children', {
                             required: 'This field is required',
                             min: {
                                 value: 0,
                                 message: 'Child capacity can\'t be less than 0'
                             },
                             pattern: {
-                                value: /^[1-9][0-9]*/, 
-                                message: 'Child capacity must be a +ve integer'
+                                value: /^[0-9]+$/, 
+                                message: 'Child capacity must be a integer'
                             }
                         })}/>
                         {errors.children &&(
@@ -164,15 +188,15 @@ export default function ManageRoomForm({onSave, isLoading}){
                 <div className="flex mb-4">
                     <label className="w-2/6 relative">
                         <span className="font-medium text-gray-600">Total Rooms</span>
-                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-1 text-sm text-gray-600 w-full focus:outline-violet-400" placeholder="eg: 3" min={1} {...register('totalQuantity', {
+                        <input type="number" className="border border-gray-300 rounded-md w-full py-1 px-1 text-sm text-gray-600 w-full focus:outline-violet-400" placeholder="eg: 3" {...register('totalQuantity', {
                             required: 'This field is required',
                             min: {
                                 value: 1,
-                                message: 'Total rooms can\'t be less than 0'
+                                message: 'Total rooms can\'t be less than 1'
                             },
                             pattern: {
-                                value: /^[1-9][0-9]*/, 
-                                message: 'Total rooms must be a +ve integer'
+                                value: /^[0-9]+$/, 
+                                message: 'Total rooms must be +ve integer'
                             }
                         })}/>
                         {errors.totalQuantity &&(
@@ -220,7 +244,7 @@ export default function ManageRoomForm({onSave, isLoading}){
                 <div className="mb-2">
                     <span className="text-gray-700 font-medium">Facilities</span>
                     <div className="grid grid-cols-4">
-                        {roomFacilitiesList.map((facility, index) => (
+                        {roomFacilitiesList.map((facility) => (
                                 <label key={facility}>
                                     <input type="checkbox" value={facility} {...register('facilities')}/>
                                     <span className="ml-2 text-sm text-gray-700">{facility}</span>
@@ -229,14 +253,26 @@ export default function ManageRoomForm({onSave, isLoading}){
                     </div>
                 </div>
                 <div className="mb-5 relative">
-                    <div className="text-gray-700 font-medium mb-1">Images</div>
+                    <p className="text-gray-700 font-medium mb-1">Images</p>
+                    <div className="grid grid-cols-6 gap-3 mb-3">
+                        {imageUrls?.map(url => (
+                            <div className="relative" key={url}>
+                                <img src={url} alt="Hotel Room" className="h-24 w-24"/>
+                                <button className="absolute -top-1 -right-1 p-0.5 border border-gray-400 bg-gray-300 rounded-full" onClick={() => removeImageUrl(url)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width={9} height={9} fill="gray"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                     <label className="">
                         <input type="file" multiple accept="image/*" className="w-full text-sm text-gray-600 file:bg-violet-50 file:text-sm file:font-semibold file:border-0 file:rounded-full file:py-2 file:px-4 file:text-violet-600 file:mr-3 hover:file:bg-violet-100" {...register('imageFiles', {
                             validate: files => {
-                                if(!files || files.length < 3){
+                                const totalfiles = (files?.length || 0) + (imageUrls?.length || 0);
+                                
+                                if(totalfiles < 3){
                                     return 'Images can\'t be less than 3';
                                 }
-                                else if(files.length > 6){
+                                else if(totalfiles > 6){
                                     return 'Images can\'t be more than 6';
                                 }
 

@@ -34,8 +34,8 @@ const getAllHotelRooms = async (hotelId) => {
     return result.data;
 }
 
-const getRoom = async ({hotelId, roomId}) => {
-    const response = fetch(`${API_BASE_URL}/api/v1/rooms/h${hotelId}/r/${roomId}`, {
+const getRoom = async (hotelId, roomId) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/rooms/h/${hotelId}/r/${roomId}`, {
         method: 'GET',
         credentials: 'include'
     });
@@ -46,7 +46,7 @@ const getRoom = async ({hotelId, roomId}) => {
         throw new Error(error.message);
     }
     
-    return result;
+    return result.data;
 }
 
 
