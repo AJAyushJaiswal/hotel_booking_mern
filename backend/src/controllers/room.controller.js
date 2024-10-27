@@ -25,6 +25,8 @@ const addRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel id!");
     }
     
+    /// Add validation to make sure the same room numbers can't be added to multiple room types
+    
     const {name, description, bedType, bedCount, pricePerNight, view, roomSize, totalQuantity, roomNumbers, adults, children, facilities} = req.body;
     
     const images = req.files;
@@ -112,6 +114,8 @@ const updateRoom = asyncHandler(async (req, res) => {
     if(!validationRes || !validationRes.isEmpty()){
         throw new ApiError(400, "Invalid room data!", validationRes.errors);
     }
+    
+    // TODO: Add Validation to make sure the same room number can't be added in multiple room types
 
     const {name, description, bedType, bedCount, pricePerNight, view, roomSize, adults, children, facilities, totalQuantity, roomNumbers, imageUrls} = req.body;
     const imageFiles = req.files; 

@@ -26,6 +26,8 @@ const getHotel = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Invalid Hotel Idddddddd!');
     }
     
+    // TODO : Remove the delete statement few lines down and instead add an projection in the below mongoose query 
+    
     const hotel = await Hotel.findOne({_id: hotelId, owner:req.user._id}).select('-__v -totalRooms -availableRooms').lean();
     
     if(!hotel){
@@ -45,6 +47,8 @@ const createHotel = asyncHandler(async (req, res) => {
     }
 
     const {name, address, city, country, type, description, starRating, contactNo, email, facilities} = req.body;
+    
+    // TODO: Add a minimimun count of 4 to images
    
     const images = req.files;
     if(!images || images.length === 0){
@@ -91,6 +95,8 @@ const updateHotel = asyncHandler(async (req, res) => {
     const {name, address, city, country, description, type, starRating, contactNo, email, facilities, images: imageUrls} = req.body;
 
     const imageFiles = req.files;
+    
+    // TODO: Add validation to make sure total image count(image urls + image files) is 4 minimum and 6 maximum
 
     if((!imageFiles || imageFiles.length === 0) && (!imageUrls || !imageUrls.length === 0)){
         throw new ApiError(400, "Images are required!");
@@ -100,6 +106,7 @@ const updateHotel = asyncHandler(async (req, res) => {
         const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));
         const newImageUrls = await Promise.all(imageUploadPromises);
         
+        // TODO: handle for scenarios where no new image file is uploaded
         
         const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {
             name, address, city, country, description, type, 
