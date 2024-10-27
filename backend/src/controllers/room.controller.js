@@ -121,7 +121,7 @@ const updateRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Images must be in the range of 3-6!");
     } 
     
-    const isImageUrlsValid = imageUrls.every(url => currentRoom.images.includes(url));
+    const isImageUrlsValid = imageUrls?.every(url => currentRoom.images.includes(url)) || true;
     if(!isImageUrlsValid){
         throw new ApiError(400, "Invalid image urls!");
     }
@@ -138,7 +138,7 @@ const updateRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error updating hotel room!");
     }
     
-    const imagesToDelete = currentRoom.images?.filter(url => !imageUrls.includes(url)) || [];
+    const imagesToDelete = currentRoom.images?.filter(url => !imageUrls?.includes(url)) || [];
     const imageDeletePromises = imagesToDelete?.map(url => deleteFromCloudinary(url));
     await Promise.all(imageDeletePromises);
     

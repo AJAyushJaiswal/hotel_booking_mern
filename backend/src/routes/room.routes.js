@@ -40,18 +40,18 @@ router.route('/h/:hotelId')
         .isInt({min: 1}).withMessage('Bed count must be a positive integer!'),
 
         body('pricePerNight')
-        .isInt({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
+        .isDecimal({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
         
         body('view')
         .isString().withMessage('View must be a string!')
         .trim()
         .isLength({
-            min: 8,
+            min: 7,
             max: 20
         }).withMessage('View must be in the range of 8-20 characters!'),
         
         body('roomSize')
-        .isInt({min: 1}).withMessage('Room size must at least be 1 square meter!'),
+        .isDecimal({min: 1}).withMessage('Room size must at least be 1 square meter!'),
 
         body('totalQuantity')
         .isInt({min: 1}).withMessage('Total no. of rooms must be a positive integer greater than 0!'),
@@ -116,18 +116,18 @@ router.route('/h/:hotelId/r/:roomId')
         .isInt({min: 1}).withMessage('Bed count must be a positive integer!'),
 
         body('pricePerNight')
-        .isInt({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
+        .isDecimal({min: 0}).withMessage('Price per night must be a postive integer(can be 0)!'),
         
         body('view')
         .isString().withMessage('View must be a string!')
         .trim()
         .isLength({
-            min: 8,
+            min: 7,
             max: 20
         }).withMessage('View must be in the range of 8-20 characters!'),
         
         body('roomSize')
-        .isInt({min: 1}).withMessage('Room size must at least be 1 square meter!'),
+        .isDecimal({min: 1}).withMessage('Room size must at least be 1 square meter!'),
 
         body('totalQuantity')
         .isInt({min: 1}).withMessage('Total no. of rooms must be a positive integer greater than 0!'),
