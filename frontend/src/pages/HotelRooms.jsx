@@ -13,6 +13,7 @@ export default function HotelRooms(){
             showToast({message: error.message, success: false});
         }
     });
+    console.log(rooms);
 
     return (
         <div className="my-10">
@@ -119,6 +120,7 @@ export default function HotelRooms(){
                                             <p>Available Rooms: {room.availableQuantity}</p>
                                         </div>
                                     </div>
+                                    <div>Room Numbers: {room.roomNumbers.join(', ')}</div>
                                 </div>
                             ))}
                         </div> 
