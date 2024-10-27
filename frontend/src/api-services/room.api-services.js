@@ -43,7 +43,7 @@ const getRoom = async ({hotelId, roomId}) => {
     const result = await response.json();
     
     if(!result.success){
-        throw new ApiError(error.message);
+        throw new Error(error.message);
     }
     
     return result;
