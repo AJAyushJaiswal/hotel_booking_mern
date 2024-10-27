@@ -50,8 +50,26 @@ const getRoom = async ({hotelId, roomId}) => {
 }
 
 
+const updateRoom = async ({hotelId, roomId, newFormData}) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/rooms/h/${hotelId}/r/${roomId}`, {
+        method: 'PUT',
+        credentials: 'include',
+        body: newFormData
+    });
+    
+    const result = await response.json();
+    
+    if(!result.success){
+        throw new Error(result.message);
+    }
+    
+    return result;
+}
+
+
 export {
     addRoom,
     getAllHotelRooms,
-    getRoom
+    getRoom,
+    updateRoom
 }
