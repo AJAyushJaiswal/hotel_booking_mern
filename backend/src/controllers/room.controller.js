@@ -56,12 +56,12 @@ const addRoom = asyncHandler(async (req, res) => {
 
     const room = await Room.create({name, description, bedType, bedCount, pricePerNight, view, roomSize, totalQuantity, availableQuantity: totalQuantity, roomNumbers, capacityPerRoom: {adults, children}, facilities, images: imageUrls, hotel: hotelId});
     if(!room){
-        throw new ApiError("Error adding room!");
+        throw new ApiError(500, "Error adding room!");
     }
     
     const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {$inc: {totalRooms: totalQuantity, availableRooms: totalQuantity}});
     if(hotelUpdateResult.modifiedCount === 0){
-        throw new ApiError("Error adding room!");
+        throw new ApiError(500, "Error adding room!");
     }
     
     res.status(201).json(new ApiResponse(201, null, "Room added succesfully!"));
