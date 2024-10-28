@@ -44,11 +44,9 @@ const createHotel = asyncHandler(async (req, res) => {
 
     const {name, address, city, country, type, description, starRating, contactNo, email, facilities} = req.body;
     
-    // TODO: Add a minimimun count of 4 to images
-   
     const images = req.files;
-    if(!images || images.length === 0){
-        throw new ApiError(400, 'Images are required!');
+    if(!images || images.length < 3 || images.length > 6){
+        throw new ApiError(400, 'Images must be in the range of 3-6!');
     }
     
     const uploadPromises = images.map((image) => {
@@ -67,6 +65,11 @@ const createHotel = asyncHandler(async (req, res) => {
     if(!hotel){
         throw new ApiError(400, 'Failed to add hotel!');
     }
+    
+    delete hotel._doc.__v;
+    delete hotel._doc.createdAt;
+    delete hotel._doc.updatedAt;
+    delete hotel._doc.owner;
 
     res.status(201).json(new ApiResponse(201, hotel, "Hotel added successfully!"));
 });
@@ -89,20 +92,16 @@ const updateHotel = asyncHandler(async (req, res) => {
     }
 
     const {name, address, city, country, description, type, starRating, contactNo, email, facilities, images: imageUrls} = req.body;
-
     const imageFiles = req.files;
     
-    // TODO: Add validation to make sure total image count(image urls + image files) is 4 minimum and 6 maximum
-
-    if((!imageFiles || imageFiles.length === 0) && (!imageUrls || !imageUrls.length === 0)){
-        throw new ApiError(400, "Images are required!");
+    const totalImages = (imageFiles?.length || 0) + (imageUrls?.length || 0);
+    if(!imageFiles || totalImages < 3 || totalImages > 6){
+        throw new ApiError(400, "Images must be in the range of 3-6!");
     }
     
     try{
         const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));
         const newImageUrls = await Promise.all(imageUploadPromises);
-        
-        // TODO: handle for scenarios where no new image file is uploaded
         
         const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {
             name, address, city, country, description, type, 
