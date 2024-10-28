@@ -67,9 +67,26 @@ const updateRoom = async ({hotelId, roomId, newFormData}) => {
 }
 
 
+const deleteRoom = async ({hotelId, roomId}) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/rooms/h/${hotelId}/r/${roomId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+    });
+    
+    const result = await response.json();
+    
+    if(!result.success){
+        throw new Error(result.message);
+    }
+
+    return result;
+};
+
+
 export {
     addRoom,
     getAllHotelRooms,
     getRoom,
-    updateRoom
+    updateRoom,
+    deleteRoom
 }
