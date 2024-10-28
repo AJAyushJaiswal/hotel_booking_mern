@@ -23,18 +23,14 @@ const getHotel = asyncHandler(async (req, res) => {
     }
     
     if(!isValidObjectId(hotelId)){
-        throw new ApiError(400, 'Invalid Hotel Idddddddd!');
+        throw new ApiError(400, 'Invalid Hotel Id!');
     }
     
-    // TODO : Remove the delete statement few lines down and instead add an projection in the below mongoose query 
-    
-    const hotel = await Hotel.findOne({_id: hotelId, owner:req.user._id}).select('-__v -totalRooms -availableRooms').lean();
+    const hotel = await Hotel.findOne({_id: hotelId, owner:req.user._id}).select('-__v -totalRooms -availableRooms -owner -createdAt -updatedAt').lean();
     
     if(!hotel){
         throw new ApiError(400, 'Invalid Hotel Id!');
     }
-    
-    delete hotel.owner;
     
     return res.status(200).json(new ApiResponse(200, hotel, "Hotel fetched successfully!"));
 })
