@@ -14,16 +14,17 @@ const addRoom = asyncHandler(async (req, res) => {
     if(!hotelId || !isValidObjectId(hotelId)){
         throw new ApiError(400, "Invalid hotel id!");
     }
+
+    const hotelExists = await Hotel.exists({_id: hotelId, owner: req.user._id});
+    if(!hotelExists){
+        throw new ApiError(400, "Invalid hotel id!");
+    }
     
     const valResult = validationResult(req);
     if(!valResult.isEmpty()){
         throw new ApiError(400, "Invalid hotel data!", valResult.errors);
     }
     
-    const hotelExists = await Hotel.exists({_id: hotelId, owner: req.user._id});
-    if(!hotelExists){
-        throw new ApiError(400, "Invalid hotel id!");
-    }
     
     const {name, description, bedType, bedCount, pricePerNight, view, roomSize, totalQuantity, roomNumbers, adults, children, facilities} = req.body;
     const images = req.files;
