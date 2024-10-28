@@ -113,6 +113,11 @@ const updateRoom = asyncHandler(async (req, res) => {
     if(!hotelId || !roomId || !isValidObjectId(hotelId) || !isValidObjectId(roomId)){
         throw new ApiError(400, "Invalid hotel or room id!");
     }
+    
+    const hotelExists = await Hotel.exists({_id: hotelId, owner: req.user._id}).lean();
+    if(!hotelExists){
+        throw new ApiError(400, "Invalid hotel or room id!");
+    }
 
     const currentRoom = await Room.findOne({_id:roomId, hotel:hotelId}, {images: 1, _id: 0}).lean();
     if(!currentRoom){
