@@ -120,8 +120,6 @@ const updateRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid room data!", validationRes.errors);
     }
     
-    // TODO: Add Validation to make sure the same room number can't be added in multiple room types
-
     const {name, description, bedType, bedCount, pricePerNight, view, roomSize, adults, children, facilities, totalQuantity, roomNumbers, imageUrls} = req.body;
     const imageFiles = req.files; 
     
@@ -133,6 +131,14 @@ const updateRoom = asyncHandler(async (req, res) => {
     const isImageUrlsValid = imageUrls?.every(url => currentRoom.images.includes(url)) || true;
     if(!isImageUrlsValid){
         throw new ApiError(400, "Invalid image urls!");
+    }
+
+    const rooms = await Room.find({_id: {$ne: roomId}}, {roomNumbers: 1, _id: 0}).lean();
+    const existingRoomNumbers = rooms?.flatMap(room => room.roomNumbers) || [];
+    
+    const alreadyUsedRooms = roomNumbers.filter(roomNo => existingRoomNumbers.includes(Number.parseInt(roomNo)));
+    if(alreadyUsedRooms.length > 0){
+        throw new ApiError(400, `Room${alreadyUsedRooms.length > 1 ? 's' : ''} ${alreadyUsedRooms.join(', ')} already exist${alreadyUsedRooms.length === 1 ? 's' : ''}!`);
     }
 
     const imageUploadPromises = imageFiles.map(image => uploadToCloudinary(image));    
