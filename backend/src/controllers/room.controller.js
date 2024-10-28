@@ -178,8 +178,12 @@ const deleteRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel or room id!");
     }
     
-    const deletedRoom = await Room.findOneAndDelete({_id: roomId, hotel: hotelId}).select('images totalQuantity availableQuantity -_id').lean();
+    const hotelOwnedByUserExists = await Hotel.exists({_id: hotelId, owner: req.user.id}).lean();
+    if(!hotelOwnedByUserExists){
+        throw new ApiError(400, "Invalid hotel or room id!");
+    }
     
+    const deletedRoom = await Room.findOneAndDelete({_id: roomId, hotel: hotelId}).select('images totalQuantity availableQuantity -_id').lean();
     if(!deletedRoom){
         throw new ApiError(400, "Error removing the hotel room!");
     }
