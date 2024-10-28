@@ -25,17 +25,22 @@ const addRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel id!");
     }
     
-    /// Add validation to make sure the same room numbers can't be added to multiple room types
-    
     const {name, description, bedType, bedCount, pricePerNight, view, roomSize, totalQuantity, roomNumbers, adults, children, facilities} = req.body;
-    
     const images = req.files;
+
     if(!images || images.length < 3 || images.length > 6){
         throw new ApiError(400, "No. of images must be in the range of 3-6!");
     }
     
-    let imageUrls;
+    const rooms = await Room.find({}, {roomNumbers: 1, _id: 0}).lean();
+    const existingRoomNumbers = rooms?.flatMap(room => room.roomNumbers) || [];
+    
+    const alreadyUsedRooms = roomNumbers.filter(roomNo => existingRoomNumbers.includes(Number.parseInt(roomNo)));
+    if(alreadyUsedRooms.length > 0){
+        throw new ApiError(400, `Room${alreadyUsedRooms.length > 1 ? 's' : ''} ${alreadyUsedRooms.join(', ')} already exist${alreadyUsedRooms.length === 1 ? 's' : ''}!`);
+    }
 
+    let imageUrls;
     try{
         const imageUploadPromises = images.map(image => uploadToCloudinary(image));    
         imageUrls = await Promise.all(imageUploadPromises);
