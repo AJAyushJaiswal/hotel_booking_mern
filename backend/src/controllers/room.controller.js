@@ -81,6 +81,9 @@ const getAllHotelRooms = asyncHandler(async (req, res) => {
     }
     
     const rooms = await Room.find({hotel: hotelId}).select('-__v -description -images -facilities -hotel -createdAt -updatedAt').lean();
+    if(!rooms){
+        throw new ApiError(500, "Error getting hotel rooms!");
+    }
     
     res.status(200).json(new ApiResponse(200, rooms, "Hotel rooms fetched successfully!"));
 });
