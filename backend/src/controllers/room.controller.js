@@ -33,7 +33,7 @@ const addRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "No. of images must be in the range of 3-6!");
     }
     
-    const rooms = await Room.find({}, {roomNumbers: 1, _id: 0}).lean();
+    const rooms = await Room.find({hotel: hotelId}, {roomNumbers: 1, _id: 0}).lean();
     const existingRoomNumbers = rooms?.flatMap(room => room.roomNumbers) || [];
     
     const alreadyUsedRooms = roomNumbers.filter(roomNo => existingRoomNumbers.includes(Number.parseInt(roomNo)));
@@ -142,7 +142,7 @@ const updateRoom = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid image urls!");
     }
 
-    const rooms = await Room.find({_id: {$ne: roomId}}, {roomNumbers: 1, _id: 0}).lean();
+    const rooms = await Room.find({_id: {$ne: roomId}, hotel: hotelId}, {roomNumbers: 1, _id: 0}).lean();
     const existingRoomNumbers = rooms?.flatMap(room => room.roomNumbers) || [];
     
     const alreadyUsedRooms = roomNumbers.filter(roomNo => existingRoomNumbers.includes(Number.parseInt(roomNo)));
