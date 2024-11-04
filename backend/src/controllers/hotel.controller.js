@@ -5,6 +5,7 @@ import {Hotel} from '../models/hotel.model.js';
 import {validationResult} from 'express-validator';
 import {uploadToCloudinary, deleteFromCloudinary} from '../utils/cloudinary.js';
 import {isValidObjectId} from 'mongoose';
+import {Room} from '../models/room.model.js';
 
 
 
@@ -129,6 +130,24 @@ const deleteHotel = asyncHandler(async (req, res) => {
     
     if(!hotelId || !isValidObjectId(hotelId)){
         throw new ApiError(400, "Invalid Hotel Id!");
+    }
+    
+    let isMoreRoomAvailable = true;
+    while(isMoreRoomAvailable){
+        const room = await Room.findOneAndDelete({hotel: hotelId}).select('images').lean(); 
+        if(!room){
+            isMoreRoomAvailable = false;
+            break;
+        };
+        
+        try{
+            const imageDeletePromises = room.images.map(url => deleteFromCloudinary(url));
+            await Promise.all(imageDeletePromises);
+        }
+        catch(error){
+            if(process.env.NODE_ENV !== 'production') console.log(error);
+            throw new ApiError(500, "Error deleting rooms of this hotel!");
+        }
     }
     
     const deletedHotel = await Hotel.findOneAndDelete({_id: hotelId, owner: req.user._id}).select('images').lean();
