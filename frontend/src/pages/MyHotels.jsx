@@ -5,7 +5,7 @@ import {useAppContext} from '../contexts/AppContext.jsx';
 
 
 export default function MyHotels(){
-    const {data:hotelData} = useQuery('getMyHotels', getMyHotels, {
+    const {data:hotelData, refetch} = useQuery('getMyHotels', getMyHotels, {
         onError: (error) => {
             showToast({message: error.message, success: false});
         }
@@ -16,6 +16,7 @@ export default function MyHotels(){
     const {mutate} = useMutation(deleteHotel, {
         onSuccess: async (result) => {
             showToast({message: result.message, success: result.success});
+            refetch();
         },
         onError: async (error) => {
             showToast({message: error.message, success: false});
