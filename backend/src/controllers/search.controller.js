@@ -3,6 +3,7 @@ import {validationResult} from 'express-validator';
 import {ApiError} from '../utils/ApiError.js';
 import {Hotel} from '../models/hotel.model.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
+import {isValidObjectId, Types} from 'mongoose';
 
 const searchHotelRooms = asyncHandler(async (req, res) => {
     const valRes = validationResult(req);
@@ -117,7 +118,89 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
 });
 
 
+const getHotel = asyncHandler(async (req, res) => {
+    const hotelId = req.params.hotelId;
+    if(!hotelId || !isValidObjectId(hotelId)){
+        throw new ApiError(400, "Invalid hotel id!");
+    }
+    
+    const {rooms} = req.body;
+    if(!rooms){
+        throw new ApiError(400, "Invalid room ids!");
+    }
+
+    const roomIds = rooms.map(obj => new Types.ObjectId(obj._id));
+    
+    roomIds.forEach(roomId => {
+        if(!isValidObjectId(roomId)){
+            throw new ApiError(400, "Invalid room ids");
+        }
+    });
+    
+    const data = await Hotel.aggregate([
+        {
+            $match: {
+                _id: new Types.ObjectId(hotelId)
+            }
+        },
+        {
+            $lookup: {
+                from: 'rooms',
+                localField: '_id',
+                foreignField: 'hotel',
+                as: 'rooms',
+                pipeline: [
+                    {
+                        $match: {
+                            _id: {
+                                $in: [...roomIds]
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            name: 1,
+                            description: 1,
+                            bedType: 1,
+                            bedCount: 1,
+                            pricePerNight: 1,
+                            view: 1,
+                            roomSize: 1,
+                            availableQuantity: 1,
+                            images: 1,
+                            capacityPerRoom: 1,
+                            facilities: 1,
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                address: 1,
+                city: 1,
+                country: 1,
+                type: 1,
+                description: 1,
+                images: 1,
+                contactNo: 1,
+                email: 1,
+                facilities: 1,
+                rooms: 1
+            }
+        }
+    ]);
+    
+    if(!data){
+        throw new ApiError(400, "Error fetching hotel data!");
+    }
+    
+    res.status(200).json(new ApiResponse(200, "Hotel fetched successfully!", data));
+});
+
 
 export {
-    searchHotelRooms
+    searchHotelRooms,
+    getHotel
 }

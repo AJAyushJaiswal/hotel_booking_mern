@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {searchHotelRooms} from '../controllers/search.controller.js';
+import {searchHotelRooms, getHotel} from '../controllers/search.controller.js';
 import {query} from 'express-validator';
 
 
@@ -22,6 +22,8 @@ router.route('')
     ],
     searchHotelRooms
 );
+
+router.route('/h/:hotelId').get(getHotel);
 
 
 export default router;
