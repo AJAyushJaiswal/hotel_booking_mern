@@ -33,7 +33,7 @@ import searchRouter from './routes/search.routes.js';
 app.use('/api/v1/users/', userRouter);
 app.use('/api/v1/hotels/', hotelRouter);
 app.use('/api/v1/rooms/', roomRouter);
-app.use('/api/v1/search/', searchRouter);
+app.use('/api/v1/search', searchRouter);
 
 
 if(process.env.NODE_ENV === 'production'){
