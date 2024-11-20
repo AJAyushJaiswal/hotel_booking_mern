@@ -9,17 +9,19 @@ const SearchContextProvider = ({children}) => {
     const [childCount, setChildCount] = useState(0);
     const [checkInDate, setCheckInDate] = useState(new Date());
     const [checkOutDate, setCheckOutDate] = useState(new Date());
+    const [roomCount, setRoomCount] = useState(1);
     
-    const saveSearchValues = (location, adultCount, childCount, checkInDate, checkOutDate) => {
+    const saveSearchValues = (location, adultCount, childCount, checkInDate, checkOutDate, roomCount) => {
         setLocation(location);
         setAdultCount(adultCount);
         setChildCount(childCount);
         setCheckInDate(checkInDate);
         setCheckOutDate(checkOutDate);
+        setRoomCount(roomCount);
     }
 
     return(
-        <SearchContext.Provider value={{location, adultCount, childCount, checkInDate, checkOutDate, saveSearchValues}}>
+        <SearchContext.Provider value={{location, adultCount, childCount, checkInDate, checkOutDate, roomCount, saveSearchValues}}>
             {children}
         </SearchContext.Provider>
     );
