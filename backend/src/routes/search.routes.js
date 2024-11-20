@@ -18,7 +18,10 @@ router.route('')
         .isInt({min: 0}).withMessage('Child count must be a positive integer!'),
         
         query('pageNumber')
-        .isInt({min: 1}).withMessage('Page number must be an integer greater than 1!')
+        .isInt({min: 1}).withMessage('Page number must be an integer greater than 1!'),
+
+        query('roomCount')
+        .isInt({min: 1}).withMessage('Room count must be a positive integer!')
     ],
     searchHotelRooms
 );

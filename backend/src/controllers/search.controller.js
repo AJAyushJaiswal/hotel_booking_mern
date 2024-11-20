@@ -11,7 +11,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid search query!");
     }
 
-    const {location, adultCount, childCount, checkInDate, checkOutDate} = req.query;
+    const {location, adultCount, childCount, checkInDate, checkOutDate, roomCount} = req.query;
     
     const pageSize = 10;
     const pageNumber = parseInt(req.query.pageNumber);
@@ -20,7 +20,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     const searchResult = await Hotel.aggregate([
         {
             $match: {
-                availableRooms: {$gt: 0},
+                availableRooms: {$gt: roomCount},
                 $or: [
                     {city: new RegExp(location, 'i')},
                     {address: new RegExp(location, 'i')},
@@ -61,7 +61,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         },
         {
             $match: {
-                roomCount: {$gt: 0}
+                roomCount: {$gt: roomCount}
             }
         },
         {
