@@ -16,6 +16,7 @@ import EditHotel from './pages/EditHotel.jsx';
 import AddRoom from './pages/AddRoom.jsx';
 import HotelRooms from './pages/HotelRooms.jsx';
 import EditRoom from './pages/EditRoom.jsx';
+import {SearchContextProvider} from './contexts/SearchContext.jsx';
 
 
 const router = createBrowserRouter([
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <Home/>
+        element: <SearchContextProvider><Home/></SearchContextProvider>
       },
       {
         path: 'register',
