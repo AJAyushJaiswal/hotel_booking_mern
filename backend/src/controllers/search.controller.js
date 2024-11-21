@@ -8,7 +8,7 @@ import {isValidObjectId, Types} from 'mongoose';
 const searchHotelRooms = asyncHandler(async (req, res) => {
     const valRes = validationResult(req);
     if(!valRes?.isEmpty()){
-        throw new ApiError(400, "Invalid search query!");
+        throw new ApiError(400, "Invalid search query!", valRes.errors);
     }
 
     const {location, adultCount, childCount, checkInDate, checkOutDate, roomCount} = req.query;
