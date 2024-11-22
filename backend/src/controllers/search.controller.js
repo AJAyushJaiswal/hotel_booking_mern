@@ -110,7 +110,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     const totalResults = searchResult[0].totalHotelsMatched || 0;
     const totalPages = Math.ceil(totalResults / pageSize);
 
-    if(pageNumber > totalPages){
+    if(totalPages > 0 && pageNumber > totalPages){
         throw new ApiError(400, "Page not found!");
     }
     
