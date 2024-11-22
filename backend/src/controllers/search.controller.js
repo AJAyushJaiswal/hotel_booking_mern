@@ -20,7 +20,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     const searchResult = await Hotel.aggregate([
         {
             $match: {
-                availableRooms: {$gt: roomCount},
+                availableRooms: {$gte: 0},
                 $or: [
                     {city: new RegExp(location, 'i')},
                     {address: new RegExp(location, 'i')},
@@ -61,7 +61,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         },
         {
             $match: {
-                roomCount: {$gt: roomCount}
+                roomCount: {$gte: parseInt(roomCount)}
             }
         },
         {
@@ -107,13 +107,20 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error fetching search results!");
     }
     
+    const totalResults = searchResult[0].totalHotelsMatched || 0;
+    const totalPages = Math.ceil(totalResults / pageSize);
+
+    if(pageNumber > totalPages){
+        throw new ApiError(400, "Page not found!");
+    }
+    
     const pagination = {
-        totalResults: searchResult[0].totalHotelsMatched,
-        pageSize: pageSize,
+        totalResults: totalResults,
+        totalPages: totalPages,
+        pageSize: pageNumber !== totalPages ? 10 : totalResults % pageSize,
         pageNumber: pageNumber
     }
     
-
     res.status(200).json(new ApiResponse(200, {hotels: searchResult[0].hotels, pagination}, "Search results fetched successfully!"));
 });
 
