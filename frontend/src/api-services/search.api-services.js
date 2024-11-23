@@ -1,16 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
-const searchHotels = async (location, adultCount, childCount, checkInDate, checkOutDate, roomCount, pageNumber) => {
-    const query = new URLSearchParams({
-        location,
-        adultCount,
-        childCount,
-        checkInDate,
-        checkOutDate,
-        roomCount,
-        pageNumber
-    }).toString();
-
+const searchHotels = async (query) => {
     const response = await fetch(`${API_BASE_URL}/api/v1/search?${query}`, {
         method: 'GET',
         credentials: 'include'
@@ -22,7 +12,7 @@ const searchHotels = async (location, adultCount, childCount, checkInDate, check
         throw new Error(result.message);
     }
     
-    return result;
+    return result.data;
 }
 
 export {
