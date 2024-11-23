@@ -1,6 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
-const searchHotels = async (location, adultCount, childCount, checkInDate, checkOutDate, roomCount, pageNumber=1) => {
+const searchHotels = async (location, adultCount, childCount, checkInDate, checkOutDate, roomCount, pageNumber) => {
     const query = new URLSearchParams({
         location,
         adultCount,
