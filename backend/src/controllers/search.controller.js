@@ -17,6 +17,8 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     const pageNumber = parseInt(req.query.pageNumber);
     const skip = pageSize * (pageNumber - 1);
     
+    // TODO: use checkInDate and checkOutDate for filtering after booking collection has been created
+    
     const searchResult = await Hotel.aggregate([
         {
             $match: {
@@ -117,7 +119,6 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     const pagination = {
         totalResults: totalResults,
         totalPages: totalPages,
-        pageSize: pageNumber !== totalPages ? 10 : totalResults % pageSize,
         pageNumber: pageNumber
     }
     
