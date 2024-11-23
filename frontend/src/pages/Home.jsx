@@ -7,7 +7,7 @@ export default function Home(){
             <div className="mb-24 flex flex-col items-center">
                 <p className="text-2xl font-semibold mb-14">Book your favorite hotel</p> 
                 <div>
-                    <SearchForm/>
+                    <SearchForm boxCss={'relative px-12 pt-14 pb-16'} searchBtnCss={'px-8 py-2.5 absolute -bottom-6'}/>
                 </div>
             </div>
             <Section title="Recommended For You"/>
