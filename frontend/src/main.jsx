@@ -17,16 +17,17 @@ import AddRoom from './pages/AddRoom.jsx';
 import HotelRooms from './pages/HotelRooms.jsx';
 import EditRoom from './pages/EditRoom.jsx';
 import {SearchContextProvider} from './contexts/SearchContext.jsx';
+import Search from './pages/Search.jsx';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout/>,
+    element: <SearchContextProvider><Layout/></SearchContextProvider>,
     children: [
       {
         path: '',
-        element: <SearchContextProvider><Home/></SearchContextProvider>
+        element: <Home/>
       },
       {
         path: 'register',
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <LogIn/>
+      },
+      {
+        path: '/search',
+        element: <Search/>
       }
     ]
   },
@@ -72,7 +77,7 @@ const router = createBrowserRouter([
         ]
       }
     ]
-  },
+  }
 ]);
 
 
