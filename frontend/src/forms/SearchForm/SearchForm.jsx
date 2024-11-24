@@ -1,15 +1,12 @@
-import {useState} from "react";
+import {useState, useRef, useEffect} from "react";
 import {useSearchContext} from '../../contexts/SearchContext.jsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import {searchHotels} from '../../api-services/search.api-services.js';
-import {useAppContext} from '../../contexts/AppContext.jsx';
+import {useNavigate} from 'react-router-dom';
 
-export default function SearchForm(){
+export default function SearchForm({boxCss, searchBtnCss}){
     const search = useSearchContext();
-    const {showToast} = useAppContext();
-
-    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const [location, setLocation] = useState(search.location);
     const [adultCount, setAdultCount] = useState(search.adultCount);
@@ -17,6 +14,9 @@ export default function SearchForm(){
     const [checkInDate, setCheckInDate] = useState(search.checkInDate);
     const [checkOutDate, setCheckOutDate] = useState(search.checkOutDate);
     const [roomCount, setRoomCount] = useState(search.roomCount);
+    
+    const [isGuestOptionsVisibile, setIsGuestOptionsVisibile] = useState(false);
+    const guestOptionsRef = useRef(null);
 
     const minCheckInDate = new Date();
     const maxCheckInDate = new Date();
@@ -40,29 +40,32 @@ export default function SearchForm(){
         setCheckOutDate(new Date(date));
     }
     
+    const handleGuestOptionsInsideClick = (event) => {
+        setIsGuestOptionsVisibile((prev) => !prev); 
+        event.stopPropagation();
+    };
+    
+    const handleGuestOptionsOutsideClick = (event) => {
+        if(guestOptionsRef.current && !guestOptionsRef.current.contains(event.target)){
+            setIsGuestOptionsVisibile(false);
+        }
+    }
+    
+    useEffect(() => {
+        document.addEventListener('click', handleGuestOptionsOutsideClick);
+        return () => {
+            document.removeEventListener('click', handleGuestOptionsOutsideClick);
+        }
+    }, []);
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
-
-        search.saveSearchValues(location, adultCount, childCount, checkInDate, checkOutDate);
-        
-        searchHotels(location, adultCount, childCount, checkInDate, checkOutDate, roomCount)
-        .then((result) => {
-            showToast({message: result.message, success: result.success});
-            console.log(result.data);
-            
-            // TODO: open search page with result data
-        })
-        .catch((error) => {
-            showToast({message: error.message, success: "false"});
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+        search.saveSearchValues(location, adultCount,childCount, checkInDate, checkOutDate, roomCount);
+        navigate('/search');
     }
 
     return(
-        <form className="relative px-12 pt-14 pb-16 rounded-3xl md:flex" style={{boxShadow: '0 0 16px 0 rgba(0, 0, 0, 0.2)'}} onSubmit={handleSubmit}>
+        <form className={`rounded-3xl flex flex-row items-center md:flex-row ${boxCss}`} style={{boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)'}} onSubmit={handleSubmit}>
             <label className="border-2 border-gray-300 w-96 flex flex-col m-3 rounded-lg">
                 <div className="pl-3 pt-1 text-gray-600 text-sm">Location</div>
                 <input type="text" className="outline-none px-3 pb-1 text-xl text-gray-700 font-semibold rounded-lg" value={location} onChange={handleLocationInput}/>
@@ -75,7 +78,7 @@ export default function SearchForm(){
                         selectsStart
                         minDate={minCheckInDate}
                         maxDate={maxCheckInDate}
-                        className="w-24 overflow-hidden outline-none text-gray-700 pl-3 pt-1 font-semibold"  onChange={handleCheckInDateInput}
+                        className="w-40 overflow-hidden outline-none text-gray-700 pl-3 my-1 font-semibold"  onChange={handleCheckInDateInput}
                     />
                 </label>
                 <label className="border-2 border-gray-300 rounded-lg w-44 m-3 flex flex-col">
@@ -85,18 +88,18 @@ export default function SearchForm(){
                         selectsEnd
                         minDate={minCheckOutDate}
                         maxDate={maxCheckOutDate}
-                        className="w-24 overflow-hidden outline-none text-gray-700 pl-3 pt-1 font-semibold"  onChange={handleCheckOutDateInput}
+                        className="w-40 overflow-hidden outline-none text-gray-700 pl-3 my-1 font-semibold"  onChange={handleCheckOutDateInput}
                     />
                 </label>
             </div>
             <div className="relative">
-                <div className="border-2 border-gray-300 rounded-lg w-96 m-3 md:w-80" onClick={() => document.getElementById('guest_selector').classList.toggle('hidden')}>
+                <div className="border-2 border-gray-300 rounded-lg w-96 m-3 md:w-80" onClick={handleGuestOptionsInsideClick}>
                     <div className="pl-3 pt-1 text-gray-600 text-sm">Guests & Rooms</div>
                     <div className="text-gray-700 mx-3 mb-1 mt-1 font-semibold">
                        {adultCount} {adultCount == 1 ? 'Adult' : 'Adults'}, {childCount} {childCount == 1 ? 'child' : 'children'}, {roomCount} {roomCount == 1 ? 'room' : 'rooms'}
                     </div>
                 </div>
-                <div className="rounded-xl px-5 py-5 w-80 absolute -bottom-52 bg-white mx-3 z-10 md:-bottom-48 hidden" id="guest_selector" style={{boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)'}}>
+                <div className={`rounded-xl px-5 py-5 w-80 absolute -bottom-52 bg-white mx-3 z-10 md:-bottom-48 ${isGuestOptionsVisibile ? '' : 'hidden'}`} style={{boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)'}} ref={guestOptionsRef} onClick={(event) => event.stopPropagation()}>
                     <div className="mb-7 flex justify-between items-center">
                         <div>
                             <span className="font-semibold text-gray-600">Rooms </span>
@@ -139,7 +142,7 @@ export default function SearchForm(){
                 </div>
             </div>
             
-            <button type="submit" className="border border-violet-600 bg-violet-600 text-white px-8 py-2.5 text-xl mx-3 rounded-3xl absolute -bottom-6 disabled:bg-violet-400 disabled:border-violet-400" style={{left: '44%'}} disabled={loading}>Search</button>
+            <button type="submit" className={`border border-violet-600 bg-violet-600 text-white rounded-3xl text-xl mx-3 ${searchBtnCss}`} style={{left: '44%'}}>Search</button>
         </form>
     )
 }
