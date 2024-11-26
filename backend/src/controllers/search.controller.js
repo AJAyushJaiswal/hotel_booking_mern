@@ -90,6 +90,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                             starRating: 1,
                             images: 1,
                             type: 1,
+                            facilities: 1,
                             roomCount: 1,
                             rooms: 1
                         }
