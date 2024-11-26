@@ -3,8 +3,8 @@ import {Link} from 'react-router-dom';
 export default function SearchResultCard({hotel}){
 
     return(
-        <div className="border border-gray-300 rounded-xl px-8 py-6 mb-6 flex" key={hotel._id}>
-            <div className="mr-6 w-60 h-56">
+        <div className="border border-gray-300 rounded-xl p-6 mb-6 flex" key={hotel._id}>
+            <div className="mr-6 w-60 h-52">
                 <img src={hotel.images[0]} alt={hotel.name} className="w-full h-full rounded-xl"/>
             </div>
             <div className="w-full">
@@ -23,7 +23,15 @@ export default function SearchResultCard({hotel}){
                     <p>Property Type: {hotel.type}</p>
                     <p>Room Types Matched: {hotel.roomCount}</p>
                 </div>
-                <div className="flex justify-end mt-16">
+                <div className="flex justify-between mt-12 pt-2 mr-2">
+                    <div className="flex items-end">
+                        {
+                            hotel.facilities.slice(0, 3).map((facility) => (
+                                <p className="bg-slate-400 text-white rounded-lg py-1 px-3 mr-3" key={facility}>{facility}</p>
+                            ))
+                        }
+                        <p className="text-gray-600">{hotel.facilities.length > 3 ? `+${hotel.facilities.length - 3} more` : ''}</p>
+                    </div>
                     <Link to={`./h/${hotel._id}`} className="bg-violet-600 px-2 py-1 rounded text-white">View Details</Link>
                 </div>
             </div>
