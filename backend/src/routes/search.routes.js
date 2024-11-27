@@ -21,7 +21,35 @@ router.route('')
         .isInt({min: 1}).withMessage('Page number must be an integer greater than 1!'),
 
         query('roomCount')
-        .isInt({min: 1}).withMessage('Room count must be a positive integer!')
+        .isInt({min: 1}).withMessage('Room count must be a positive integer!'),
+        
+        query('minPricePerNight')
+        .isDecimal({min: 1}).withMessage('Minimum price per night must be at least 1!')
+        .optional(),
+
+        query('maxPricePerNight')
+        .isDecimal().withMessage('Maximum price per night must a number!')
+        .optional(),
+
+        query('hotelRatings')
+        .isArray().withMessage("Hotel ratings must be an array!")
+        .optional(),
+
+        query('hotelTypes')
+        .isArray().withMessage("Hotel types must be an array!")
+        .optional(),
+
+        query('roomViews')
+        .isArray().withMessage("Room views must be an array!")
+        .optional(),
+
+        query('hotelFacilities')
+        .isArray().withMessage("Hotel facilities must be an array!")
+        .optional(),
+
+        query('roomFacilities')
+        .isArray().withMessage("Room facilities must be an array!")
+        .optional(),
     ],
     searchHotelRooms
 );
