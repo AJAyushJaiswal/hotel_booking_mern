@@ -11,6 +11,21 @@ const roomFacilitiesList = [
 ];
 
 
+const roomViewsList = [
+    'Lake',
+    'Pool',
+    'City',
+    'Ocean',
+    'River',
+    'Forest',
+    'Garden',
+    'Skyline',
+    'Mountain',
+    'Historic',
+];
+
+
 export {
-    roomFacilitiesList
+    roomFacilitiesList,
+    roomViewsList
 }
