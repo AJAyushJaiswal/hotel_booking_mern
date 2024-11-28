@@ -50,8 +50,7 @@ router.route('/:hotelId')
         .isLength({min: 50, max: 300}).withMessage('Description must be between 50-200 characters!'),
 
         body('starRating')
-        .optional()
-        .isIn([1, 2, 3, 4, 5]).withMessage('Star rating can only be an integer in range of 1-5!'),
+        .isIn([0, 1, 2, 3, 4, 5]).withMessage('Star rating can only be an integer in range of 0-5!'),
 
         body('contactNo').notEmpty().withMessage('Contact no. is required!'),
 
@@ -104,8 +103,7 @@ router.route('/add').post(
         .isLength({min: 50, max: 300}).withMessage('Description must be between 50-200 characters!'),
 
         body('starRating')
-        .optional()
-        .isIn([1, 2, 3, 4, 5]).withMessage('Star rating can only be an integer in range of 1-5!'),
+        .isIn([0, 1, 2, 3, 4, 5]).withMessage('Star rating can only be an integer in range of 0-5!'),
 
         body('contactNo').notEmpty().withMessage('Contact no. is required!'),
 
