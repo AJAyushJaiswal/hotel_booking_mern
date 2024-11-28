@@ -30,7 +30,8 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                     {city: new RegExp(location, 'i')},
                     {address: new RegExp(location, 'i')},
                     {country: new RegExp(location, 'i')},
-                ]
+                ],
+                starRating: { $in: starRatings?.map(rating => parseInt(rating)) || [0, 1, 2, 3, 4, 5]}
             }
         },
         {
