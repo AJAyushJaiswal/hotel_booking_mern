@@ -104,18 +104,22 @@ export default function DetailsSection(){
                     
                     <select name="" className="border rounded border-gray-700 mx-2 px-1 font-normal py-0.5" {...register("starRating", {
                         validate: (value) => {
-                            if(value && !([1,2,3,4,5].includes(Number(value)))){
+                            if(value && Number(value) !== 0 && !([1,2,3,4,5].includes(Number(value)))){
                                 return 'Star rating must be in range of 1-5';
                             }
                             
                             return true;
                         }
                     })}>
-                        <option value="" className="text-sm font-bold">No Star Rating</option>
+                        <option value={0} className="text-sm font-bold">No Star Rating</option>
                         {[1, 2, 3, 4, 5].map((star) => (
                             <option key={star} value={star}>{star}</option>
                         ))}
                     </select>
+                    {
+                        errors.starRating && 
+                        <p className="text-red-500">{errors.starRating.message}</p>
+                    }
                 </label>                       
             </div>
         </div>
