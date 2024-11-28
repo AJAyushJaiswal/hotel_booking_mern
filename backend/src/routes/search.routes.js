@@ -31,8 +31,8 @@ router.route('')
         .isDecimal().withMessage('Maximum price per night must a number!')
         .optional(),
 
-        query('hotelRatings')
-        .isArray().withMessage("Hotel ratings must be an array!")
+        query('starRatings')
+        .isArray().withMessage("Star ratings must be an array!")
         .optional(),
 
         query('hotelTypes')
