@@ -105,7 +105,7 @@ const updateHotel = asyncHandler(async (req, res) => {
     
     const hotelUpdateResult = await Hotel.updateOne({_id: hotelId, owner: req.user._id}, {
         name, address, city, country, description, type, 
-        starRating: starRating || null, 
+        starRating, 
         contactNo, 
         email: email || null, 
         facilities: facilities || [], 
