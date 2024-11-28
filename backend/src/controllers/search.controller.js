@@ -11,7 +11,10 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid search query!", valRes.errors);
     }
 
-    const {location, adultCount, childCount, checkInDate, checkOutDate, roomCount} = req.query;
+    const {
+        location, adultCount, childCount, checkInDate, checkOutDate, roomCount, 
+        minPricePerNight, maxPricePerNight, starRatings, hotelTypes, roomViews, hotelFacilities, roomFacilities
+    } = req.query;
     
     const pageSize = 10;
     const pageNumber = parseInt(req.query.pageNumber);
@@ -43,7 +46,9 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                                 {'availableQuantity': {$gt: 0}},
                                 {'capacityPerRoom.adults': {$gte: parseInt(adultCount)}},
                                 {'capacityPerRoom.children': {$gte: parseInt(childCount)}},
-                            ]
+                                {'pricePerNight': {$gte: parseFloat(minPricePerNight)}},
+                                {'pricePerNight': {$lte: parseFloat(maxPricePerNight)}},
+                            ],
                         }
                     },
                     {
