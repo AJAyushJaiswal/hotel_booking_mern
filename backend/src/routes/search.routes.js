@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import {searchHotelRooms, getHotel} from '../controllers/search.controller.js';
 import {query} from 'express-validator';
+import {hotelTypesList} from '../constants/hotel.constants.js';
 
 
 const router = Router();
@@ -30,26 +31,41 @@ router.route('')
         query('maxPricePerNight')
         .isDecimal().withMessage('Maximum price per night must a number!')
         .optional(),
-
+            
         query('starRatings')
-        .isArray().withMessage("Star ratings must be an array!")
+        .isArray().withMessage('Star ratings must be an array!')
         .optional(),
+        
+        query('starRatings.*')
+        .isIn([0, 1, 2, 3, 4, 5]).withMessage('Star rating must be in range of 0-5!'),
 
         query('hotelTypes')
         .isArray().withMessage("Hotel types must be an array!")
         .optional(),
 
+        query('hotelTypes.*')
+        .isIn(hotelTypesList).withMessage("Invalid hotel type!"),
+
         query('roomViews')
         .isArray().withMessage("Room views must be an array!")
         .optional(),
+
+        query('roomViews.*')
+        .isString().withMessage("Room view must be a string!"),
 
         query('hotelFacilities')
         .isArray().withMessage("Hotel facilities must be an array!")
         .optional(),
 
+        query('hotelFacilities.*')
+        .isString().withMessage("Hotel facility must be a string!"),
+
         query('roomFacilities')
         .isArray().withMessage("Room facilities must be an array!")
         .optional(),
+
+        query('roomFacilities.*')
+        .isString().withMessage("Room facility must be a string!"),
     ],
     searchHotelRooms
 );
