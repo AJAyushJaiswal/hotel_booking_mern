@@ -23,7 +23,7 @@ export default function ManageHotelForm({onSave, isLoading, hotelData}){
         formData.append('description', newHotelData.description);
         formData.append('contactNo', newHotelData.contactNo);
         formData.append('email', newHotelData.email);
-        if([1,2,3,4,5].includes(Number(newHotelData.starRating))){formData.append('starRating', newHotelData.starRating)};
+        formData.append('starRating', newHotelData.starRating);
         formData.append('type', newHotelData.type);
         
         Array.from(newHotelData.facilities)?.forEach((facility, index) => {
