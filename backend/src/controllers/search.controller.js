@@ -24,18 +24,21 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     
     // TODO: use checkInDate and checkOutDate for filtering after booking collection has been created
     
+    const hotelMatchQuery = {
+        availableRooms: {$gte: 0},
+        $or: [
+            {city: new RegExp(location, 'i')},
+            {address: new RegExp(location, 'i')},
+            {country: new RegExp(location, 'i')},
+        ],
+    }
+    
+    if(starRatings) hotelMatchQuery.starRating = { $in: starRatings?.map(rating => parseInt(rating))};
+    if(hotelTypes) hotelMatchQuery.type = {$in: hotelTypes};
+    
     const searchResult = await Hotel.aggregate([
         {
-            $match: {
-                availableRooms: {$gte: 0},
-                $or: [
-                    {city: new RegExp(location, 'i')},
-                    {address: new RegExp(location, 'i')},
-                    {country: new RegExp(location, 'i')},
-                ],
-                starRating: { $in: starRatings?.map(rating => parseInt(rating)) || [0, 1, 2, 3, 4, 5]},
-                type: {$in: hotelTypes || hotelTypesList},
-            }
+            $match: hotelMatchQuery 
         },
         {
             $lookup: {
