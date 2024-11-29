@@ -35,6 +35,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     
     if(starRatings) hotelMatchQuery.starRating = { $in: starRatings?.map(rating => parseInt(rating))};
     if(hotelTypes) hotelMatchQuery.type = {$in: hotelTypes};
+    if(hotelFacilities) hotelMatchQuery.facilities = {$all: hotelFacilities};
     
     const roomMatchQuery = {
         availableQuantity: {$gt: 0},
