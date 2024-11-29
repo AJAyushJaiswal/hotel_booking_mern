@@ -4,6 +4,7 @@ import {ApiError} from '../utils/ApiError.js';
 import {Hotel} from '../models/hotel.model.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {isValidObjectId, Types} from 'mongoose';
+import {hotelTypesList, hotelFacilitiesList} from '../constants/hotel.constants.js';
 
 const searchHotelRooms = asyncHandler(async (req, res) => {
     const valRes = validationResult(req);
@@ -31,7 +32,8 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                     {address: new RegExp(location, 'i')},
                     {country: new RegExp(location, 'i')},
                 ],
-                starRating: { $in: starRatings?.map(rating => parseInt(rating)) || [0, 1, 2, 3, 4, 5]}
+                starRating: { $in: starRatings?.map(rating => parseInt(rating)) || [0, 1, 2, 3, 4, 5]},
+                type: {$in: hotelTypes || hotelTypesList},
             }
         },
         {
