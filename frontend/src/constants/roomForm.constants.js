@@ -12,6 +12,7 @@ const roomFacilitiesList = [
 
 
 const roomViewsList = [
+    'No View',
     'Lake View',
     'Pool View',
     'City View',
