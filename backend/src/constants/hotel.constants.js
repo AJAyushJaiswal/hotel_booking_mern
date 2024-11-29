@@ -19,8 +19,42 @@ const countryCityObjectList = {
 };
 
 
+const hotelFacilitiesList = [
+    'Wi-Fi',
+    'Parking',
+    'Valet',
+    'Concierge Service',
+    'Laundry Service',
+    'Housekeeping',
+    'Business Center',
+    'Breakfast Buffet',
+    'Bar/Lounge',
+    'Swimming Pool',
+    'Spa',
+    'Massage Service',
+    'Gym',
+    'Sauna',
+    'Golf Course',
+    'Conference Room',
+    'Banquet Hall',
+    'Auditorium',
+    'Babysitting Services',
+    'Playground',
+    'Wheelchair Access',
+    'Air Conditioning',
+    'Heating',
+    'Refrigerator',
+    'Television',
+    'Airport Shuttle',
+    'Car Rental Desk',
+    'Bicycle Rentals',
+    'Garden',
+    'Beach Access'
+];
+
 export {
     hotelTypesList,
     countriesList,
-    countryCityObjectList
+    countryCityObjectList,
+    hotelFacilitiesList
 }
