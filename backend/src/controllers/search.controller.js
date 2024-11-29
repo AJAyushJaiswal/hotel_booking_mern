@@ -31,10 +31,19 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
             {address: new RegExp(location, 'i')},
             {country: new RegExp(location, 'i')},
         ],
-    }
+    };
     
     if(starRatings) hotelMatchQuery.starRating = { $in: starRatings?.map(rating => parseInt(rating))};
     if(hotelTypes) hotelMatchQuery.type = {$in: hotelTypes};
+    
+    const roomMatchQuery = {
+        availableQuantity: {$gt: 0},
+        'capacityPerRoom.adults': {$gte: parseInt(adultCount)},
+        'capacityPerRoom.children': {$gte: parseInt(childCount)},
+        pricePerNight: {$gte: parseFloat(minPricePerNight), $lte: parseFloat(maxPricePerNight)},
+    };
+    
+    if(roomViews) roomMatchQuery.view = {$in: roomViews};
     
     const searchResult = await Hotel.aggregate([
         {
@@ -48,16 +57,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                 as: 'rooms',
                 pipeline: [
                     {
-                        $match: {
-                            $and: [
-                                {'availableQuantity': {$gt: 0}},
-                                {'capacityPerRoom.adults': {$gte: parseInt(adultCount)}},
-                                {'capacityPerRoom.children': {$gte: parseInt(childCount)}},
-                                {'pricePerNight': {$gte: parseFloat(minPricePerNight)}},
-                                {'pricePerNight': {$lte: parseFloat(maxPricePerNight)}},
-                                {'view': {$in: roomViews || roomViewsList}}
-                            ],
-                        }
+                        $match: roomMatchQuery
                     },
                     {
                         $project: {
