@@ -45,6 +45,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     };
     
     if(roomViews) roomMatchQuery.view = {$in: roomViews};
+    if(roomFacilities) roomMatchQuery.facilities = {$all: roomFacilities};
     
     const searchResult = await Hotel.aggregate([
         {
