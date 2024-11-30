@@ -4,8 +4,6 @@ import {ApiError} from '../utils/ApiError.js';
 import {Hotel} from '../models/hotel.model.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {isValidObjectId, Types} from 'mongoose';
-import {hotelTypesList, hotelFacilitiesList} from '../constants/hotel.constants.js';
-import {roomViewsList, roomFacilitiesList} from '../constants/room.constants.js';
 
 const searchHotelRooms = asyncHandler(async (req, res) => {
     const valRes = validationResult(req);
@@ -41,9 +39,10 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         availableQuantity: {$gt: 0},
         'capacityPerRoom.adults': {$gte: parseInt(adultCount)},
         'capacityPerRoom.children': {$gte: parseInt(childCount)},
-        pricePerNight: {$gte: parseFloat(minPricePerNight), $lte: parseFloat(maxPricePerNight)},
+        pricePerNight: {$gte: parseFloat(minPricePerNight), },
     };
     
+    if(maxPricePerNight === 10001) roomMatchQuery.pricePerNight.$lte = parseFloat(maxPricePerNight);
     if(roomViews) roomMatchQuery.view = {$in: roomViews};
     if(roomFacilities) roomMatchQuery.facilities = {$all: roomFacilities};
     
