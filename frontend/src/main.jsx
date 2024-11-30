@@ -18,6 +18,7 @@ import HotelRooms from './pages/HotelRooms.jsx';
 import EditRoom from './pages/EditRoom.jsx';
 import {SearchContextProvider} from './contexts/SearchContext.jsx';
 import Search from './pages/Search.jsx';
+import SearchHotel from './pages/SearchHotel.jsx';
 
 
 const router = createBrowserRouter([
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: '/search',
         element: <Search/>
+      },
+      {
+        path: '/search/:hotelId',
+        element: <SearchHotel/>
       }
     ]
   },
