@@ -17,7 +17,7 @@ const searchHotels = async (query) => {
 
 
 const getHotel = async (hotelId, rooms) => {
-    const response = await fetch(`${API_BASE_URL}/api/v1/search/${hotelId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/search/h/${hotelId}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
