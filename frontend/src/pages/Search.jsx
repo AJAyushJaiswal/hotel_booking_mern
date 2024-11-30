@@ -14,7 +14,7 @@ export default function Search(){
 
     const [pageNumber, setPageNumber] = useState(1);
     const [minPricePerNight, setMinPricePerNight] = useState(0);
-    const [maxPricePerNight, setMaxPricePerNight] = useState(4000);
+    const [maxPricePerNight, setMaxPricePerNight] = useState(10001);
     const [starRatings, setStarRatings] = useState([]);
     const [hotelTypes, setHotelTypes] = useState([]);
     const [roomViews, setRoomViews] = useState([]);
@@ -83,13 +83,13 @@ export default function Search(){
                         </div> 
                         <div className="border-x border-gray-300 px-5 py-4">
                             <p className="font-semibold">Price Range (per night)</p>
-                                <span>&#x20B9; {minPricePerNight} - &#x20B9; {maxPricePerNight}{maxPricePerNight === 4000  ? '+' : ''}</span>
+                                <span>&#x20B9; {minPricePerNight} - &#x20B9; {maxPricePerNight !== 10001  ? maxPricePerNight : `${maxPricePerNight-1}+`}</span>
                                 <div className="mt-5 relative">
                                     <label className="">
-                                        <input type="range" className="border rounded-3xl w-full h-1 cursor-pointer" name="minPricePerNight" value={minPricePerNight} min={0} max={4000} step={100} onInput={handleMinPriceSlider}></input>
+                                        <input type="range" className="border rounded-3xl w-full h-1 cursor-pointer" name="minPricePerNight" value={minPricePerNight} min={0} max={10001} step={100} onInput={handleMinPriceSlider}></input>
                                     </label>
                                     <label className="mt-2">
-                                        <input type="range" className="border rounded-3xl w-full h-1 cursor-pointer" name="maxPricePerNight" value={maxPricePerNight} min={0} max={4000} step={100} onInput={handleMaxPriceSlider}></input>
+                                        <input type="range" className="border rounded-3xl w-full h-1 cursor-pointer" name="maxPricePerNight" value={maxPricePerNight} min={0} max={10001} step={100} onInput={handleMaxPriceSlider}></input>
                                     </label>
                                 </div>
                         </div>
