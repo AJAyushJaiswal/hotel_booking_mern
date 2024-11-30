@@ -13,8 +13,8 @@ export default function Search(){
     const {showToast} = useAppContext();
 
     const [pageNumber, setPageNumber] = useState(1);
-    const [minPricePerNight, setMinPriceNight] = useState(1);
-    const [maxPricePerNight, setMaxPriceNight] = useState(4000);
+    const [minPricePerNight, setMinPricePerNight] = useState(0);
+    const [maxPricePerNight, setMaxPricePerNight] = useState(4000);
     const [starRatings, setStarRatings] = useState([]);
     const [hotelTypes, setHotelTypes] = useState([]);
     const [roomViews, setRoomViews] = useState([]);
@@ -58,6 +58,20 @@ export default function Search(){
         else setState(prev => [...prev, event.target.value]);
     }
     
+    const handleMinPriceSlider = (event) => {
+        const minPrice = parseInt(event.target.value);
+        if (minPrice <= (maxPricePerNight - 100)){
+            setMinPricePerNight(minPrice);
+        }
+    }
+
+    const handleMaxPriceSlider = (event) => {
+        const maxPrice = parseInt(event.target.value);
+        if (maxPrice >= (minPricePerNight + 100)){
+            setMaxPricePerNight(maxPrice);
+        }
+    }
+
     return(
         <div className="my-8">
             <SearchForm boxCss={'px-5 py-4'} searchBtnCss={'px-3 py-1.5'}/>
@@ -69,16 +83,15 @@ export default function Search(){
                         </div> 
                         <div className="border-x border-gray-300 px-5 py-4">
                             <p className="font-semibold">Price Range (per night)</p>
-                            <label className="">
-                                <span>&#x20B9; {minPricePerNight} - &#x20B9; {maxPricePerNight}</span>
-                                <div className="mt-4 relative">
-                                    <p className="border border-2 rounded-xl border-blue-700"></p>
-                                    <div className="flex">
-                                        <p className="border rounded-3xl p-1.5 bg-red-500 absolute left-0 top-0"></p>
-                                        <p className="border rounded-3xl p-1.5 bg-red-500 absolute right-0 top-0"></p>
-                                    </div>
+                                <span>&#x20B9; {minPricePerNight} - &#x20B9; {maxPricePerNight}{maxPricePerNight === 4000  ? '+' : ''}</span>
+                                <div className="mt-5 relative">
+                                    <label className="">
+                                        <input type="range" className="border rounded-3xl w-full h-1 cursor-pointer" name="minPricePerNight" value={minPricePerNight} min={0} max={4000} step={100} onInput={handleMinPriceSlider}></input>
+                                    </label>
+                                    <label className="mt-2">
+                                        <input type="range" className="border rounded-3xl w-full h-1 cursor-pointer" name="maxPricePerNight" value={maxPricePerNight} min={0} max={4000} step={100} onInput={handleMaxPriceSlider}></input>
+                                    </label>
                                 </div>
-                            </label>
                         </div>
                         <div className="border border-gray-300 pl-5 py-4">
                             <p className="font-semibold">Star Rating</p>
