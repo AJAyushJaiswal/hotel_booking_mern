@@ -15,6 +15,28 @@ const searchHotels = async (query) => {
     return result.data;
 }
 
+
+const getHotel = async (hotelId, rooms) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/search/${hotelId}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(rooms)
+    });
+
+    const result = await response.json();
+    
+    if(!result.status){
+        throw new Error(result.message);
+    }
+    
+    return result.data;
+}
+
+
 export {
-    searchHotels
+    searchHotels,
+    getHotel
 };
