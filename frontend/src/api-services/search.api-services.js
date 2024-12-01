@@ -24,7 +24,7 @@ const getHotel = async (hotelId, query) => {
 
     const result = await response.json();
     
-    if(!result.status){
+    if(!result.success){
         throw new Error(result.message);
     }
     
