@@ -142,13 +142,13 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
 
 
 const getHotel = asyncHandler(async (req, res) => {
-    const hotelId = req.params.hotelId;
+    const hotelId = req.params?.hotelId;
     if(!hotelId || !isValidObjectId(hotelId)){
         throw new ApiError(400, "Invalid hotel id!");
     }
     
-    const {rooms} = req.query;
-    if(!rooms || Array.isArray(rooms)){
+    const rooms = req.query?.rooms;
+    if(!rooms || !Array.isArray(rooms)){
         throw new ApiError(400, "Invalid room ids!");
     }
 
