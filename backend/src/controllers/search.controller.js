@@ -220,7 +220,7 @@ const getHotel = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error fetching hotel data!");
     }
     
-    res.status(200).json(new ApiResponse(200, "Hotel fetched successfully!", data));
+    res.status(200).json(new ApiResponse(200, data, "Hotel fetched successfully!"));
 });
 
 
