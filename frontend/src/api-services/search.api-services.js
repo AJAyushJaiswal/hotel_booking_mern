@@ -16,14 +16,10 @@ const searchHotels = async (query) => {
 }
 
 
-const getHotel = async (hotelId, rooms) => {
-    const response = await fetch(`${API_BASE_URL}/api/v1/search/h/${hotelId}`, {
+const getHotel = async (hotelId, query) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/search/h/${hotelId}?${query}`, {
         method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(rooms)
+        credentials: 'include'
     });
 
     const result = await response.json();
