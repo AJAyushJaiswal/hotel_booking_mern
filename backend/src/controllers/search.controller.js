@@ -147,17 +147,18 @@ const getHotel = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid hotel id!");
     }
     
-    const {rooms} = req.body;
-    if(!rooms){
+    const {rooms} = req.query;
+    if(!rooms || Array.isArray(rooms)){
         throw new ApiError(400, "Invalid room ids!");
     }
 
-    const roomIds = rooms.map(obj => new Types.ObjectId(obj._id));
-    
-    roomIds.forEach(roomId => {
+    const roomIds = [];
+
+    rooms.forEach(roomId => {
         if(!isValidObjectId(roomId)){
-            throw new ApiError(400, "Invalid room ids");
+            throw new ApiError(400, "Invalid room ids!");
         }
+        roomIds.push(new Types.ObjectId(roomId));
     });
     
     const data = await Hotel.aggregate([
