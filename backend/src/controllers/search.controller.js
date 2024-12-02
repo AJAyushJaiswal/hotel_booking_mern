@@ -42,7 +42,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         pricePerNight: {$gte: parseFloat(minPricePerNight), },
     };
     
-    if(maxPricePerNight === 10001) roomMatchQuery.pricePerNight.$lte = parseFloat(maxPricePerNight);
+    if(maxPricePerNight) roomMatchQuery.pricePerNight.$lte = parseFloat(maxPricePerNight);
     if(roomViews) roomMatchQuery.view = {$in: roomViews};
     if(roomFacilities) roomMatchQuery.facilities = {$all: roomFacilities};
     
