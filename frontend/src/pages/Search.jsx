@@ -20,6 +20,7 @@ export default function Search(){
     const [roomViews, setRoomViews] = useState([]);
     const [hotelFacilities, setHotelFacilities] = useState([]);
     const [roomFacilities, setRoomFacilities] = useState([]);
+    const [sortCriteria, setSortCriteria] = useState('default');
 
     const query = new URLSearchParams({
         location,
@@ -31,6 +32,7 @@ export default function Search(){
         pageNumber,
         minPricePerNight,
         maxPricePerNight,
+        sortCriteria
     });
     
     starRatings.map(rating => query.append('starRatings[]', rating));
@@ -70,6 +72,10 @@ export default function Search(){
         if (maxPrice >= (minPricePerNight + 100)){
             setMaxPricePerNight(maxPrice);
         }
+    }
+    
+    const sortCriteriaSelectHandler = (event) => {
+        setSortCriteria(event.target.value);
     }
 
     return(
@@ -167,7 +173,17 @@ export default function Search(){
                         {
                             data && Object.keys(data).length > 0 && data.hotels.length > 0 ? (
                                     <div>
-                                        <h2 className="text-2xl font-semibold mb-4">{data.pagination.totalResults} hotel{data.pagination.totalResults > 1 ? 's' : ''} found {location ? `in ${location}` : ''}</h2>
+                                        <div className="flex justify-between mb-4">
+                                            <h2 className="text-2xl font-semibold">{data.pagination.totalResults} hotel{data.pagination.totalResults > 1 ? 's' : ''} found {location ? `in ${location}` : ''}</h2>
+                                            <select className="border rounded-lg border-gray-300 px-1 text-gray-600 outline-none" onChange={sortCriteriaSelectHandler}>
+                                                <option value="default">Sort By</option>                                                
+                                                <option value="pricePerNightDesc">Price Per Night &darr;</option>                                                
+                                                <option value="pricePerNightAsc">Price Per Night &uarr;</option>                                                
+                                                <option value="starRatingDesc">Star Rating &darr;</option>                                                
+                                                <option value="starRatingAsc">Star Rating &uarr;</option>                                                
+                                            </select>
+                                        </div>
+                                        
                                         <div>
                                             {
                                                 data.hotels.map((hotel) =>( 
