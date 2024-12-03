@@ -32,7 +32,10 @@ export default function SearchResultCard({hotel}){
                         }
                         <p className="text-gray-600">{hotel.facilities.length > 3 ? `+${hotel.facilities.length - 3} more` : ''}</p>
                     </div>
-                    <Link to={`./${hotel._id}`} state={hotel.rooms} className="bg-violet-600 px-2 py-1 rounded text-white">View Details</Link>
+                    <div>
+                        <p className="mb-1 font-semibold text-right">&#x20B9; {hotel.minPrice}</p>
+                        <Link to={`./${hotel._id}`} state={hotel.rooms} className="bg-violet-600 px-2 py-1 rounded text-white">View Details</Link>
+                    </div>
                 </div>
             </div>
         </div>
