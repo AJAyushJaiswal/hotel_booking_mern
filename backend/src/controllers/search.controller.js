@@ -13,7 +13,7 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
 
     const {
         location, adultCount, childCount, checkInDate, checkOutDate, roomCount, 
-        minPricePerNight, maxPricePerNight, starRatings, hotelTypes, roomViews, hotelFacilities, roomFacilities
+        sortCriteria, minPricePerNight, maxPricePerNight, starRatings, hotelTypes, roomViews, hotelFacilities, roomFacilities
     } = req.query;
     
     const stayDays = (new Date(checkOutDate) - new Date(checkInDate))/ (24 * 3600 * 1000);
@@ -47,6 +47,26 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
     if(maxPricePerNight) roomMatchQuery.pricePerNight.$lte = parseFloat(maxPricePerNight);
     if(roomViews) roomMatchQuery.view = {$in: roomViews};
     if(roomFacilities) roomMatchQuery.facilities = {$all: roomFacilities};
+    
+    const sortQuery = {
+        
+    }
+    
+    if(sortCriteria === 'default'){
+        sortQuery.createdAt = 1;
+    }
+    else if(sortCriteria === 'pricePerNightDesc'){
+        sortQuery.minPrice = -1;
+    }
+    else if(sortCriteria === 'pricePerNightAsc'){
+        sortQuery.minPrice = 1;
+    }
+    else if(sortCriteria === 'starRatingDesc'){
+        sortQuery.starRating = -1;
+    }
+    else if(sortCriteria === 'starRatingAsc'){
+        sortQuery.starRating = 1;
+    }
     
     const searchResult = await Hotel.aggregate([
         {
@@ -103,6 +123,9 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                     },
                     {
                         $limit: pageSize
+                    },
+                    {
+                        $sort: sortQuery
                     },
                     {
                         $project: {
