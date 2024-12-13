@@ -16,6 +16,8 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
         minPricePerNight, maxPricePerNight, starRatings, hotelTypes, roomViews, hotelFacilities, roomFacilities
     } = req.query;
     
+    const stayDays = (new Date(checkOutDate) - new Date(checkInDate))/ (24 * 3600 * 1000);
+    
     const pageSize = 10;
     const pageNumber = parseInt(req.query.pageNumber);
     const skip = pageSize * (pageNumber - 1);
@@ -62,7 +64,8 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                     },
                     {
                         $project: {
-                            _id: 1
+                            _id: 1,
+                            pricePerNight: 1
                         }
                     }
                 ]
@@ -72,6 +75,13 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
             $addFields: {
                 roomCount: { 
                     $size: "$rooms"
+                },
+                minPrice: {
+                    $multiply: [
+                        {$min: "$rooms.pricePerNight"},
+                        stayDays
+                    ]
+
                 }
             }
         },
@@ -106,7 +116,8 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                             type: 1,
                             facilities: 1,
                             roomCount: 1,
-                            rooms: 1
+                            rooms: 1,
+                            minPrice: 1
                         }
                     }
                 ] 
