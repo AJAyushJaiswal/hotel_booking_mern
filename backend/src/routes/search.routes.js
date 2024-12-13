@@ -24,6 +24,9 @@ router.route('')
         query('roomCount')
         .isInt({min: 1}).withMessage('Room count must be a positive integer!'),
         
+        query('searchCriteria')
+        .isIn(['default', 'pricePerNightAsc', 'pricePerNightDesc', 'starRatingAsc', 'starRatingDesc']).withMessage('Invalid search criteria!'),
+        
         query('minPricePerNight')
         .isDecimal({min: 1}).withMessage('Minimum price per night must be at least 1!')
         .optional(),
