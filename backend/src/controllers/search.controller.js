@@ -119,13 +119,13 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                 ],
                 hotels: [
                     {
+                        $sort: sortQuery
+                    },
+                    {
                         $skip: skip
                     },
                     {
                         $limit: pageSize
-                    },
-                    {
-                        $sort: sortQuery
                     },
                     {
                         $project: {
