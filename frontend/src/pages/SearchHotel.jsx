@@ -12,16 +12,27 @@ export default function SearchHotel(){
     rooms?.map(room => query.append('rooms[]', room._id));
     const queryString = query.toString();
     
-    const {data} = useQuery(['getHotel', getHotel], () => getHotel(hotelId, queryString), {
+    const {data: hotel} = useQuery(['getHotel', getHotel], () => getHotel(hotelId, queryString), {
         onError: (error) => {
             showToast({message: error.message, status: false});
         }
     });
     
-    console.log(data);
+    console.log(hotel);
     return (
-        <div>
-            Hotel Page
+        <div className="my-20">
+            <div className="flex" style={{height: '450px'}}>
+                <div className="w-3/4">
+                    <img src={hotel.images[0]} alt={hotel.name} className="w-full h-full"/>
+                </div>
+                <div className="w-1/4 ml-1">
+                    {
+                        hotel.images.map(image => (
+                            <img src={image} alt={hotel.name} className="w-full h-1/3"/>
+                        ))
+                    }
+                </div>
+            </div>
         </div>
     );
 }
