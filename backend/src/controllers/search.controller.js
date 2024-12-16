@@ -139,8 +139,14 @@ const searchHotelRooms = asyncHandler(async (req, res) => {
                             type: 1,
                             facilities: 1,
                             roomCount: 1,
-                            rooms: 1,
-                            minPrice: 1
+                            minPrice: 1,
+                            rooms: {
+                                $map: {
+                                    input: "$rooms",
+                                    as: "room",
+                                    in: "$$room._id"
+                                }
+                            },
                         }
                     }
                 ] 
