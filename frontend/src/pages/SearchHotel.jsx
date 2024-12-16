@@ -9,7 +9,7 @@ export default function SearchHotel(){
     const {showToast} = useAppContext();
     
     const query = new URLSearchParams();
-    rooms?.map(room => query.append('rooms[]', room._id));
+    rooms?.map(roomId => query.append('rooms[]', roomId));
     const queryString = query.toString();
     
     const {data: hotel} = useQuery(['getHotel', getHotel], () => getHotel(hotelId, queryString), {
@@ -23,12 +23,12 @@ export default function SearchHotel(){
         <div className="my-20">
             <div className="flex" style={{height: '450px'}}>
                 <div className="w-3/4">
-                    <img src={hotel.images[0]} alt={hotel.name} className="w-full h-full"/>
+                    <img src={hotel?.images[0]} alt={hotel?.name} className="w-full h-full"/>
                 </div>
                 <div className="w-1/4 ml-1">
                     {
-                        hotel.images.map(image => (
-                            <img src={image} alt={hotel.name} className="w-full h-1/3"/>
+                        hotel?.images?.map(image => (
+                            <img src={image} alt={hotel?.name} className="w-full h-1/3"/>
                         ))
                     }
                 </div>
