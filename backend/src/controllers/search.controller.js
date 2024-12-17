@@ -246,6 +246,7 @@ const getHotel = asyncHandler(async (req, res) => {
                 city: 1,
                 country: 1,
                 type: 1,
+                starRating: 1,
                 description: 1,
                 images: 1,
                 contactNo: 1,
